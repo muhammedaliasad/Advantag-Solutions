@@ -1,0 +1,34 @@
+@page "/sales-stats"
+@using CleanArch.Client.DTOs
+@using CleanArch.Client.Services
+@inject SalesStatsService SalesStatsService
+
+<PageTitle>Sales Statistics</PageTitle>
+
+<h3>Sales Statistics</h3>
+
+@if (stats == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <QuickGrid Items="@stats.AsQueryable()" Class="table table-striped">
+        <TemplateColumn>
+            
+        </TemplateColumn>
+        <PropertyColumn Property="@(s => s.Date)" Title="Date" Format="yyyy-MM-dd"/>
+        <PropertyColumn Property="@(s => s.Category)" Title="Category"/>
+        <PropertyColumn Property="@(s => s.Amount)" Title="Amount" Format="C2"/>
+        <PropertyColumn Property="@(s => s.TransactionCount)" Title="Transactions"/>
+    </QuickGrid>
+}
+
+@code {
+    private IEnumerable<SalesStatDto>? stats;
+
+    protected override async Task OnInitializedAsync()
+    {
+        stats = await SalesStatsService.GetSalesStatsAsync();
+    }
+}
