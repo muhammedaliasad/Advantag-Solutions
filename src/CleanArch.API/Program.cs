@@ -1,6 +1,6 @@
 using API.Middleware;
+using Domain.Database;
 using Infrastructure;
-using Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 

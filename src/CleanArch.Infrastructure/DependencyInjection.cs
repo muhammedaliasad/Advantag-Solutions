@@ -1,3 +1,4 @@
+using Domain.Database;
 using Infrastructure.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
@@ -10,10 +11,11 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<DbContext>(options => options.UseSqlServer(connectionString, actions =>
-        {
-            actions.MigrationsAssembly(nameof(Infrastructure));
-        }), ServiceLifetime.Scoped);
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.MigrationsAssembly("Domain");
+            }), ServiceLifetime.Scoped);
 
         // Add Application Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

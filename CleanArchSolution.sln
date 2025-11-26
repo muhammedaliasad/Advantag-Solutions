@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Objects", "src\CleanArch.Domain\Objects.csproj", "{EA144FEF-0D2B-4E3C-8C81-FC3510C9B406}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\CleanArch.Domain\Domain.csproj", "{EA144FEF-0D2B-4E3C-8C81-FC3510C9B406}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\CleanArch.Infrastructure\Infrastructure.csproj", "{9D271524-EB48-4182-8AD9-88C6E2EF1DB6}"
 EndProject

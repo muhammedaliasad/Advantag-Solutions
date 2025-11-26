@@ -1,4 +1,4 @@
-namespace Objects.Entities;
+namespace Domain.Entities;
 
 public class Sale : BaseEntity
 {

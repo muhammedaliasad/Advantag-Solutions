@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Objects.Entities;
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Database;
+namespace Domain.Database;
 
 public static class DataSeed
 {

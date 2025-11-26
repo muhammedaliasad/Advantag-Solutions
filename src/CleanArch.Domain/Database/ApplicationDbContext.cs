@@ -1,11 +1,11 @@
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Objects.Entities;
 
-namespace Infrastructure.Database;
+namespace Domain.Database;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public DbSet<Sale> Sales { get; set; }
+    public DbSet<Sale> Sales { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

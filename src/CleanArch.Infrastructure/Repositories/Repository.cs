@@ -1,3 +1,4 @@
+using Domain.Database;
 using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -6,10 +7,10 @@ namespace Infrastructure.Repositories;
 
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
 {
-    protected readonly Database.ApplicationDbContext _context;
+    protected readonly ApplicationDbContext _context;
     private readonly DbSet<TEntity> _dbSet;
 
-    public Repository(Database.ApplicationDbContext context)
+    public Repository(ApplicationDbContext context)
     {
         _context = context;
         _dbSet = _context.Set<TEntity>();
