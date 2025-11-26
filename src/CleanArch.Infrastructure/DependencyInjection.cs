@@ -14,7 +14,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString, sqlOptions =>
             {
-                sqlOptions.MigrationsAssembly("Domain");
+                sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name);
             }), ServiceLifetime.Scoped);
 
         // Add Application Repositories

@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Database;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
+public class ApplicationDbContext : DbContext
 {
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+    }
+
     public DbSet<Sale> Sales { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
