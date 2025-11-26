@@ -1,6 +1,7 @@
 using Domain.Entities;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace API.Controllers;
 
@@ -8,15 +9,15 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class DropdownController(IDropdownService service) : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Dropdown>>> GetAll([FromQuery] string? key)
+    [HttpPost]
+    public async Task<ActionResult<IEnumerable<Dropdown>>> GetAll([Required][FromBody] string key)
     {
-        var list = await service.GetAllAsync(key ?? string.Empty);
+        var list = await service.GetAllAsync(key);
         return Ok(list);
     }
 
-    [HttpGet("{id:long}")]
-    public async Task<ActionResult<Dropdown>> Get(long id)
+    [HttpPost]
+    public async Task<ActionResult<Dropdown>> Get([FromBody] long id)
     {
         var dto = await service.GetByIdAsync(id);
         if (dto is null) return NotFound();
