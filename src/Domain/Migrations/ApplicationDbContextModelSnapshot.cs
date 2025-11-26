@@ -51,36 +51,36 @@ namespace Domain.Migrations
                         {
                             Id = 1L,
                             Amount = 100.50m,
-                            CreatedAt = new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(6968),
-                            Date = new DateTime(2025, 11, 25, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7108)
+                            CreatedAt = new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9162),
+                            Date = new DateTime(2025, 11, 25, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9290)
                         },
                         new
                         {
                             Id = 2L,
                             Amount = 200.75m,
-                            CreatedAt = new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7417),
-                            Date = new DateTime(2025, 11, 24, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7418)
+                            CreatedAt = new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9591),
+                            Date = new DateTime(2025, 11, 24, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9592)
                         },
                         new
                         {
                             Id = 3L,
                             Amount = 50.00m,
-                            CreatedAt = new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7420),
-                            Date = new DateTime(2025, 11, 23, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7421)
+                            CreatedAt = new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9594),
+                            Date = new DateTime(2025, 11, 23, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9594)
                         },
                         new
                         {
                             Id = 4L,
                             Amount = 300.20m,
-                            CreatedAt = new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7421),
-                            Date = new DateTime(2025, 11, 22, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7422)
+                            CreatedAt = new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9595),
+                            Date = new DateTime(2025, 11, 22, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9596)
                         },
                         new
                         {
                             Id = 5L,
                             Amount = 150.00m,
-                            CreatedAt = new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7422),
-                            Date = new DateTime(2025, 11, 21, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7423)
+                            CreatedAt = new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9596),
+                            Date = new DateTime(2025, 11, 21, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9597)
                         });
                 });
 #pragma warning restore 612, 618

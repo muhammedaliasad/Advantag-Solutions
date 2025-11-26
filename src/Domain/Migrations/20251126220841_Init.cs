@@ -34,11 +34,11 @@ namespace Domain.Migrations
                 columns: new[] { "Id", "Amount", "CreatedAt", "Date", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1L, 100.50m, new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(6968), new DateTime(2025, 11, 25, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7108), null },
-                    { 2L, 200.75m, new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7417), new DateTime(2025, 11, 24, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7418), null },
-                    { 3L, 50.00m, new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7420), new DateTime(2025, 11, 23, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7421), null },
-                    { 4L, 300.20m, new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7421), new DateTime(2025, 11, 22, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7422), null },
-                    { 5L, 150.00m, new DateTime(2025, 11, 26, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7422), new DateTime(2025, 11, 21, 21, 44, 38, 648, DateTimeKind.Utc).AddTicks(7423), null }
+                    { 1L, 100.50m, new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9162), new DateTime(2025, 11, 25, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9290), null },
+                    { 2L, 200.75m, new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9591), new DateTime(2025, 11, 24, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9592), null },
+                    { 3L, 50.00m, new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9594), new DateTime(2025, 11, 23, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9594), null },
+                    { 4L, 300.20m, new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9595), new DateTime(2025, 11, 22, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9596), null },
+                    { 5L, 150.00m, new DateTime(2025, 11, 26, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9596), new DateTime(2025, 11, 21, 22, 8, 40, 877, DateTimeKind.Utc).AddTicks(9597), null }
                 });
         }
 
