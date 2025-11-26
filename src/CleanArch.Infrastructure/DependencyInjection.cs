@@ -1,20 +1,24 @@
-using CleanArch.Application.Interfaces;
-using CleanArch.Infrastructure.Data;
-using CleanArch.Infrastructure.Repositories;
+using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CleanArch.Infrastructure;
+namespace Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static void AddInfrastructure(this IServiceCollection services, string connectionString)
     {
-        services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(connectionString));
+        services.AddDbContext<DbContext>(options => options.UseSqlServer(connectionString, actions =>
+        {
+            actions.MigrationsAssembly(nameof(Infrastructure));
+        }), ServiceLifetime.Scoped);
 
-        services.AddScoped<ISalesStatsRepository, SalesStatsRepository>();
+        // Add Application Repositories
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-        return services;
+        // Add Application Services
+        services.AddScoped<ISalesService, SalesService>();
     }
 }

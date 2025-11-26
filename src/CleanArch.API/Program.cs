@@ -1,6 +1,6 @@
-using CleanArch.Infrastructure;
-using CleanArch.Application.Services;
-using CleanArch.API.Middleware;
+using API.Middleware;
+using Infrastructure;
+using Infrastructure.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,13 +12,13 @@ builder.Services.AddSwaggerGen();
 // Add Infrastructure
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection")!);
 
-// Add Application Services
-builder.Services.AddScoped<SalesStatsService>();
+// Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
+    options.AddPolicy("*",
         builder =>
         {
             builder.AllowAnyOrigin()
@@ -41,17 +41,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowAll");
+app.UseCors("*");
 
 app.UseAuthorization();
-
 app.MapControllers();
 
-// Seed Database (Optional, for demo purposes)
 using (var scope = app.Services.CreateScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<CleanArch.Infrastructure.Data.AppDbContext>();
-    // EnsureCreated will create the database if it doesn't exist and apply the seed data from OnModelCreating
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.EnsureCreated();
 }
 

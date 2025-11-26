@@ -1,6 +1,6 @@
-namespace CleanArch.Client.Constants;
+namespace Client.Constants;
 
 public static class ApiRoutes
 {
-    public const string SalesStats = "api/salesstats";
+    public const string GetAllSales = "GetAllSales";
 }

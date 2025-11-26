@@ -1,11 +1,9 @@
 @page "/sales-stats"
-@using CleanArch.Client.DTOs
-@using CleanArch.Client.Services
-@inject SalesStatsService SalesStatsService
+@inject SaleService _salesService
 
-<PageTitle>Sales Statistics</PageTitle>
+<PageTitle>Sale Data</PageTitle>
 
-<h3>Sales Statistics</h3>
+<h3>Sale Data</h3>
 
 @if (stats == null)
 {
@@ -18,17 +16,15 @@ else
             
         </TemplateColumn>
         <PropertyColumn Property="@(s => s.Date)" Title="Date" Format="yyyy-MM-dd"/>
-        <PropertyColumn Property="@(s => s.Category)" Title="Category"/>
         <PropertyColumn Property="@(s => s.Amount)" Title="Amount" Format="C2"/>
-        <PropertyColumn Property="@(s => s.TransactionCount)" Title="Transactions"/>
     </QuickGrid>
 }
 
 @code {
-    private IEnumerable<SalesStatDto>? stats;
+    private IEnumerable<SaleDto>? stats;
 
     protected override async Task OnInitializedAsync()
     {
-        stats = await SalesStatsService.GetSalesStatsAsync();
+        stats = await _salesService.GetSalesStatsAsync();
     }
 }

@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 
-namespace CleanArch.API.Middleware;
+namespace API.Middleware;
 
 public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
 {
