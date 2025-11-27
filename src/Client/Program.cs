@@ -1,5 +1,6 @@
 using Client;
 using Client.Services;
+using Radzen;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -17,6 +18,7 @@ builder.Services.AddHttpClient("ASMClient", client =>
     client.DefaultRequestHeaders.Add("User-Agent", "ASM");
 });
 
-builder.Services.AddScoped<SaleService>();
+builder.Services.AddScoped<ForecastService>();
+builder.Services.AddRadzenComponents();
 
 await builder.Build().RunAsync();

@@ -7,6 +7,13 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
 {
     public async Task InvokeAsync(HttpContext context)
     {
+        // Skip exception handling for Swagger endpoints
+        if (context.Request.Path.StartsWithSegments("/swagger"))
+        {
+            await next(context);
+            return;
+        }
+
         try
         {
             await next(context);

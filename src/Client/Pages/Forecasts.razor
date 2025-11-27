@@ -1,0 +1,302 @@
+@page "/forecasts"
+@using Application.DTOs
+@using Radzen
+@using Radzen.Blazor
+@using System.Linq
+@layout EmptyLayout
+
+<PageTitle>Forecasts</PageTitle>
+
+<div style="padding: 2rem;">
+    <h1>Forecasts</h1>
+
+    @if (forecasts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <!-- Dropdown Key Filters -->
+        <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 4px;">
+            <h3 style="margin-bottom: 1rem; font-size: 1rem; font-weight: 600;">Filters</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Business Unit</label>
+                    <RadzenDropDown TValue="string" Data="@businessUnitOptions" Value="@businessUnitFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Business Unit..." 
+                                   ValueChanged="@OnBusinessUnitFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Division</label>
+                    <RadzenDropDown TValue="string" Data="@divisionOptions" Value="@divisionFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Division..." 
+                                   ValueChanged="@OnDivisionFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Market</label>
+                    <RadzenDropDown TValue="string" Data="@marketOptions" Value="@marketFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Market..." 
+                                   ValueChanged="@OnMarketFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Department Name</label>
+                    <RadzenDropDown TValue="string" Data="@departmentNameOptions" Value="@departmentNameFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Department Name..." 
+                                   ValueChanged="@OnDepartmentNameFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Department Range</label>
+                    <RadzenDropDown TValue="string" Data="@departmentRangeOptions" Value="@departmentRangeFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Department Range..." 
+                                   ValueChanged="@OnDepartmentRangeFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account External Report</label>
+                    <RadzenDropDown TValue="string" Data="@accountExternalReportOptions" Value="@accountExternalReportFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account External Report..." 
+                                   ValueChanged="@OnAccountExternalReportFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Group</label>
+                    <RadzenDropDown TValue="string" Data="@accountGroupOptions" Value="@accountGroupFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Group..." 
+                                   ValueChanged="@OnAccountGroupFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account SubGroup</label>
+                    <RadzenDropDown TValue="string" Data="@accountSubGroupOptions" Value="@accountSubGroupFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account SubGroup..." 
+                                   ValueChanged="@OnAccountSubGroupFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Name</label>
+                    <RadzenDropDown TValue="string" Data="@accountNameOptions" Value="@accountNameFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Name..." 
+                                   ValueChanged="@OnAccountNameFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Range</label>
+                    <RadzenDropDown TValue="string" Data="@accountRangeOptions" Value="@accountRangeFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Range..." 
+                                   ValueChanged="@OnAccountRangeFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+            </div>
+        </div>
+
+        <RadzenDataGrid @ref="grid" Data="@filteredForecasts" TItem="ForecastDto" 
+                        AllowFiltering="true" 
+                        FilterMode="FilterMode.Advanced"
+                        AllowPaging="true" 
+                        PageSize="10"
+                        PageSizeOptions="@pageSizeOptions"
+                        ShowPagingSummary="true"
+                        PagingSummaryFormat="Showing {0} - {1} of {2} forecasts"
+                        AllowSorting="true"
+                        EditMode="DataGridEditMode.Single"
+                        RowUpdate="@OnRowUpdate"
+                        RowCreate="@OnRowCreate"
+                        ColumnWidth="150px">
+            <HeaderTemplate>
+                <RadzenButton Text="Add New Forecast" Icon="add_circle_outline" Click="@InsertRow" />
+            </HeaderTemplate>
+            <Columns>
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Id" Title="ID" Filterable="false" Sortable="true" Width="80px">
+                    <Template Context="data">
+                        @data.Id
+                    </Template>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Delta" Title="▲" Filterable="false" Sortable="true" Width="100px">
+                    <Template Context="data">
+                        @if (data.Delta.HasValue)
+                        {
+                            var deltaValue = data.Delta.Value;
+                            var icon = deltaValue > 0 ? "▲" : deltaValue < 0 ? "▼" : "";
+                            var color = deltaValue > 0 ? "green" : deltaValue < 0 ? "red" : "gray";
+                            <span style="color: @color;">
+                                @icon @Math.Abs(deltaValue)
+                            </span>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="int?" @bind-Value="forecast.Delta" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="AccountNo" Title="Account No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@AccountNoFilter" ValueChanged="@OnAccountNoFilterChanged" Style="width:100%" Placeholder="Search account..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.AccountNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="DepartmentNo" Title="Department No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@DepartmentNoFilter" ValueChanged="@OnDepartmentNoFilterChanged" Style="width:100%" Placeholder="Search department..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.DepartmentNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Client" Title="Client" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@ClientFilter" ValueChanged="@OnClientFilterChanged" Style="width:100%" Placeholder="Search client..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Client" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Customer" Title="Customer" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@CustomerFilter" ValueChanged="@OnCustomerFilterChanged" Style="width:100%" Placeholder="Search customer..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Customer" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Project" Title="Project" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@ProjectFilter" ValueChanged="@OnProjectFilterChanged" Style="width:100%" Placeholder="Search project..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Project" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="SizeProject" Title="Size" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@SizeFilter" 
+                                       Data="@sizeOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search size..."
+                                       Change="@OnSizeFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.SizeProject" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Property="GoFind" Title="GoFind" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@GoFindFilter" 
+                                       Data="@goFindOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search GoFind..."
+                                       Change="@OnGoFindFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.GoFind" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastDto" Title="Actuals" Sortable="false" Filterable="true">
+                    <FilterTemplate>
+                        <div style="display: flex; gap: 8px; flex-direction: column;">
+                            <RadzenDropDown TValue="int?" Value="@YearFilter" 
+                                           Data="@yearOptions" 
+                                           AllowClear="true"
+                                           AllowFiltering="true"
+                                           FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                           Placeholder="Filter by Year..."
+                                           Change="@OnYearFilterChanged"
+                                           Style="width:100%" />
+                            <RadzenDropDown TValue="int?" Value="@MonthFilter" 
+                                           Data="@monthNumbers" 
+                                           AllowClear="true"
+                                           AllowFiltering="true"
+                                           FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                           Placeholder="Filter by Month..."
+                                           ValueChanged="@OnMonthFilterChanged"
+                                           Style="width:100%">
+                                <Template Context="monthValue">
+                                    @GetMonthName((int?)monthValue)
+                                </Template>
+                            </RadzenDropDown>
+                        </div>
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @{
+                            var filteredActuals = data.Actuals.AsEnumerable();
+                            if (YearFilter.HasValue)
+                                filteredActuals = filteredActuals.Where(a => a.Year == YearFilter.Value);
+                            if (MonthFilter.HasValue)
+                                filteredActuals = filteredActuals.Where(a => a.Month == MonthFilter.Value);
+                            var total = filteredActuals.Sum(a => a.Amount);
+                        }
+                        @total.ToString("C")
+                    </Template>
+                </RadzenDataGridColumn>
+
+                <RadzenDataGridColumn TItem="ForecastDto" Property="Comment" Title="Comment" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@CommentFilter" ValueChanged="@OnCommentFilterChanged" Style="width:100%" Placeholder="Search comment..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Comment" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+
+                <RadzenDataGridColumn TItem="ForecastDto" Context="forecast" Filterable="false" Sortable="false" TextAlign="TextAlign.Right" Width="156px">
+                    <Template Context="forecast">
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(forecast))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Click="@(args => DeleteRowClick(forecast))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(forecast))">
+                        </RadzenButton>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(forecast))">
+                        </RadzenButton>
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    }
+</div>
+

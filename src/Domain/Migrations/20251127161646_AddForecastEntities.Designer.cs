@@ -4,6 +4,7 @@ using Domain.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251127161646_AddForecastEntities")]
+    partial class AddForecastEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,7 +64,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(7977),
                             Key = "BusinessUnit",
                             Label = "Business Unit 1",
                             Value = "BU1"
@@ -69,7 +72,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 2L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8893),
                             Key = "BusinessUnit",
                             Label = "Business Unit 2",
                             Value = "BU2"
@@ -77,7 +80,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 3L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8896),
                             Key = "BusinessUnit",
                             Label = "Business Unit 3",
                             Value = "BU3"
@@ -85,7 +88,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 4L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8898),
                             Key = "BusinessUnit",
                             Label = "Business Unit 4",
                             Value = "BU4"
@@ -93,7 +96,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 5L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8899),
                             Key = "BusinessUnit",
                             Label = "Business Unit 5",
                             Value = "BU5"
@@ -101,7 +104,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 6L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8900),
                             Key = "Division",
                             Label = "Division 1",
                             Value = "Div1"
@@ -109,7 +112,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 7L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8901),
                             Key = "Division",
                             Label = "Division 2",
                             Value = "Div2"
@@ -117,7 +120,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 8L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8902),
                             Key = "Division",
                             Label = "Division 3",
                             Value = "Div3"
@@ -125,7 +128,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 9L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8903),
                             Key = "Division",
                             Label = "Division 4",
                             Value = "Div4"
@@ -133,7 +136,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 10L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8904),
                             Key = "Division",
                             Label = "Division 5",
                             Value = "Div5"
@@ -141,7 +144,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 11L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8905),
                             Key = "Market",
                             Label = "Market 1",
                             Value = "Mkt1"
@@ -149,7 +152,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 12L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8906),
                             Key = "Market",
                             Label = "Market 2",
                             Value = "Mkt2"
@@ -157,7 +160,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 13L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8907),
                             Key = "Market",
                             Label = "Market 3",
                             Value = "Mkt3"
@@ -165,7 +168,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 14L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8920),
                             Key = "Market",
                             Label = "Market 4",
                             Value = "Mkt4"
@@ -173,7 +176,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 15L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8921),
                             Key = "Market",
                             Label = "Market 5",
                             Value = "Mkt5"
@@ -181,7 +184,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 16L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8922),
                             Key = "DepartmentName",
                             Label = "Department Name 1",
                             Value = "DeptName1"
@@ -189,7 +192,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 17L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8923),
                             Key = "DepartmentName",
                             Label = "Department Name 2",
                             Value = "DeptName2"
@@ -197,7 +200,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 18L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8924),
                             Key = "DepartmentName",
                             Label = "Department Name 3",
                             Value = "DeptName3"
@@ -205,7 +208,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 19L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8925),
                             Key = "DepartmentName",
                             Label = "Department Name 4",
                             Value = "DeptName4"
@@ -213,7 +216,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 20L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8926),
                             Key = "DepartmentName",
                             Label = "Department Name 5",
                             Value = "DeptName5"
@@ -221,7 +224,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 21L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8927),
                             Key = "DepartmentRange",
                             Label = "Department Range 1",
                             Value = "DeptRange1"
@@ -229,7 +232,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 22L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8928),
                             Key = "DepartmentRange",
                             Label = "Department Range 2",
                             Value = "DeptRange2"
@@ -237,7 +240,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 23L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8929),
                             Key = "DepartmentRange",
                             Label = "Department Range 3",
                             Value = "DeptRange3"
@@ -245,7 +248,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 24L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8930),
                             Key = "DepartmentRange",
                             Label = "Department Range 4",
                             Value = "DeptRange4"
@@ -253,7 +256,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 25L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8932),
                             Key = "DepartmentRange",
                             Label = "Department Range 5",
                             Value = "DeptRange5"
@@ -261,7 +264,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 26L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8933),
                             Key = "AccountExternalReport",
                             Label = "Account External Report 1",
                             Value = "AccExt1"
@@ -269,7 +272,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 27L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8934),
                             Key = "AccountExternalReport",
                             Label = "Account External Report 2",
                             Value = "AccExt2"
@@ -277,7 +280,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 28L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8935),
                             Key = "AccountExternalReport",
                             Label = "Account External Report 3",
                             Value = "AccExt3"
@@ -285,7 +288,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 29L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8936),
                             Key = "AccountExternalReport",
                             Label = "Account External Report 4",
                             Value = "AccExt4"
@@ -293,7 +296,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 30L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8937),
                             Key = "AccountExternalReport",
                             Label = "Account External Report 5",
                             Value = "AccExt5"
@@ -301,7 +304,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 31L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8938),
                             Key = "AccountGroup",
                             Label = "Account Group 1",
                             Value = "AccGroup1"
@@ -309,7 +312,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 32L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8940),
                             Key = "AccountGroup",
                             Label = "Account Group 2",
                             Value = "AccGroup2"
@@ -317,7 +320,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 33L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8948),
                             Key = "AccountGroup",
                             Label = "Account Group 3",
                             Value = "AccGroup3"
@@ -325,7 +328,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 34L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8950),
                             Key = "AccountGroup",
                             Label = "Account Group 4",
                             Value = "AccGroup4"
@@ -333,7 +336,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 35L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8951),
                             Key = "AccountGroup",
                             Label = "Account Group 5",
                             Value = "AccGroup5"
@@ -341,7 +344,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 36L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8966),
                             Key = "AccountSubGroup",
                             Label = "Account SubGroup 1",
                             Value = "AccSub1"
@@ -349,7 +352,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 37L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8967),
                             Key = "AccountSubGroup",
                             Label = "Account SubGroup 2",
                             Value = "AccSub2"
@@ -357,7 +360,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 38L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8968),
                             Key = "AccountSubGroup",
                             Label = "Account SubGroup 3",
                             Value = "AccSub3"
@@ -365,7 +368,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 39L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8969),
                             Key = "AccountSubGroup",
                             Label = "Account SubGroup 4",
                             Value = "AccSub4"
@@ -373,7 +376,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 40L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8970),
                             Key = "AccountSubGroup",
                             Label = "Account SubGroup 5",
                             Value = "AccSub5"
@@ -381,7 +384,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 41L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8971),
                             Key = "AccountName",
                             Label = "Account Name 1",
                             Value = "AccName1"
@@ -389,7 +392,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 42L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8972),
                             Key = "AccountName",
                             Label = "Account Name 2",
                             Value = "AccName2"
@@ -397,7 +400,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 43L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8973),
                             Key = "AccountName",
                             Label = "Account Name 3",
                             Value = "AccName3"
@@ -405,7 +408,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 44L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8974),
                             Key = "AccountName",
                             Label = "Account Name 4",
                             Value = "AccName4"
@@ -413,7 +416,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 45L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8975),
                             Key = "AccountName",
                             Label = "Account Name 5",
                             Value = "AccName5"
@@ -421,7 +424,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 46L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8976),
                             Key = "AccountRange",
                             Label = "Account Range 1",
                             Value = "AccRange1"
@@ -429,7 +432,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 47L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8977),
                             Key = "AccountRange",
                             Label = "Account Range 2",
                             Value = "AccRange2"
@@ -437,7 +440,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 48L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8979),
                             Key = "AccountRange",
                             Label = "Account Range 3",
                             Value = "AccRange3"
@@ -445,7 +448,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 49L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8980),
                             Key = "AccountRange",
                             Label = "Account Range 4",
                             Value = "AccRange4"
@@ -453,7 +456,7 @@ namespace Domain.Migrations
                         new
                         {
                             Id = 50L,
-                            CreatedAt = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 11, 27, 16, 16, 45, 644, DateTimeKind.Utc).AddTicks(8981),
                             Key = "AccountRange",
                             Label = "Account Range 5",
                             Value = "AccRange5"
@@ -468,10 +471,6 @@ namespace Domain.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("AccountNo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Client")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -484,13 +483,6 @@ namespace Domain.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Customer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Delta")
-                        .HasColumnType("int");
-
-                    b.Property<string>("DepartmentNo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -523,7 +515,6 @@ namespace Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")

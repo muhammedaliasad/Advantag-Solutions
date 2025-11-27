@@ -20,10 +20,10 @@ public static class DependencyInjection
         // Add Application Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-        // Add Application Services
-        services.AddScoped<ISalesService, SalesService>();
-
         // Dropdown service registration
         services.AddScoped<IDropdownService, DropdownService>();
+        
+        // Forecast service registration
+        services.AddScoped<IForecastService, ForecastService>();
     }
 }

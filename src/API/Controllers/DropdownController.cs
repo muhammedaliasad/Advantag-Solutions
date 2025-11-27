@@ -9,15 +9,15 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class DropdownController(IDropdownService service) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost("GetAll")]
     public async Task<ActionResult<IEnumerable<Dropdown>>> GetAll([Required][FromBody] string key)
     {
         var list = await service.GetAllAsync(key);
         return Ok(list);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Dropdown>> Get([FromBody] long id)
+    [HttpGet("{id:long}")]
+    public async Task<ActionResult<Dropdown>> Get(long id)
     {
         var dto = await service.GetByIdAsync(id);
         if (dto is null) return NotFound();
