@@ -87,6 +87,22 @@ public static class DataSeed
             new Dropdown { Id = 49, Key = DropdownKeys.AccountRange, Label = "Account Range 4", Value = "AccRange4", ParentId = null },
             new Dropdown { Id = 50, Key = DropdownKeys.AccountRange, Label = "Account Range 5", Value = "AccRange5", ParentId = null }
         );
+
+        // Seed basic roles and a test user
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = "Admin" },
+            new Role { Id = 2, Name = "User" }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            // PasswordHash left null for testing token generation without authentication
+            new User { Id = 1, UserName = "testuser", PasswordHash = null }
+        );
+
+        modelBuilder.Entity<UserRole>().HasData(
+            new { UserId = 1L, RoleId = 1L },
+            new { UserId = 1L, RoleId = 2L }
+        );
     }
 }
 

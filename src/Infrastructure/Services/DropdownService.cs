@@ -1,5 +1,7 @@
 using Domain.Entities;
 using Infrastructure.Interfaces;
+using Infrastructure.Repositories;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Services;
 
@@ -24,7 +26,7 @@ public class DropdownService : IDropdownService
 
     public async Task AddAsync(Dropdown dto) => await _repository.AddAsync(dto);
 
-    public async Task UpdateAsync(Dropdown dto) => _repository.Update(dto);
+    public async Task UpdateAsync(Dropdown dto) { _repository.Update(dto); await Task.CompletedTask; }
 
     public async Task RemoveAsync(long id)
     {

@@ -25,5 +25,8 @@ public static class DependencyInjection
 
         // Dropdown service registration
         services.AddScoped<IDropdownService, DropdownService>();
+
+        // Auth service
+        services.AddSingleton<IAuthService, AuthService>();
     }
 }
