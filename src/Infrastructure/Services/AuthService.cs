@@ -1,35 +1,25 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Infrastructure.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Services;
 
-public interface IAuthService
+public class AuthService(IConfiguration configuration) : IAuthService
 {
-    string GenerateToken(long userId, IEnumerable<string> roles);
-}
-
-public class AuthService : IAuthService
-{
-    private readonly IConfiguration _configuration;
-
-    public AuthService(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-
     public string GenerateToken(long userId, IEnumerable<string> roles)
     {
-        var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key missing"));
-        var issuer = _configuration["Jwt:Issuer"] ?? "ExampleIssuer";
-        var audience = _configuration["Jwt:Audience"] ?? "ExampleAudience";
+        var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key missing"));
+        
+        var issuer = configuration["Jwt:Issuer"] ?? "ExampleIssuer";
+        var audience = configuration["Jwt:Audience"] ?? "ExampleAudience";
 
         var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         };
 
         foreach (var role in roles)
@@ -43,7 +33,7 @@ public class AuthService : IAuthService
             issuer: issuer,
             audience: audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(2),
+            expires: DateTime.UtcNow.AddHours(12),
             signingCredentials: creds
         );
 
