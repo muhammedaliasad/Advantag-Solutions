@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using System.Net.Http.Json;
+using System.Reflection;
 
 namespace Client.Pages;
 
@@ -16,8 +17,8 @@ public partial class Forecasts : ComponentBase
     [Inject] private IHttpClientFactory HttpClientFactory { get; set; } = null!;
 
     private List<ForecastDto>? forecasts;
-    private List<ForecastDto> filteredForecasts = new();
-    private RadzenDataGrid<ForecastDto>? grid;
+    private List<ForecastViewModel> filteredForecasts = new();
+    private RadzenDataGrid<ForecastViewModel>? grid;
 
     // Filter variables
     private string? ClientFilter;
@@ -65,15 +66,6 @@ public partial class Forecasts : ComponentBase
         ApplyFilters();
     }
 
-    private int? YearFilter;
-    private int? MonthFilter;
-
-    private void OnYearFilterChanged(object? value)
-    {
-        YearFilter = value as int?;
-        ApplyFilters();
-    }
-
     private void OnSizeFilterChanged(object? value)
     {
         SizeFilter = value?.ToString();
@@ -86,46 +78,12 @@ public partial class Forecasts : ComponentBase
         ApplyFilters();
     }
 
-    private void OnMonthFilterChanged(int? value)
-    {
-        MonthFilter = value;
-        ApplyFilters();
-        StateHasChanged();
-    }
-
     // Dropdown filter options
     private List<string> sizeOptions = new() { "Small", "Medium", "Large", "Extra Large" };
     private List<string> goFindOptions = new() { "Yes", "No", "Pending" };
     
-    // Year and Month filter options
-    private List<int> yearOptions = new() { 2024, 2025, 2026, 2027, 2028 };
-    private List<int> monthNumbers = new() { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-    
-    private Dictionary<int, string> monthNames = new()
-    {
-        { 1, "January" },
-        { 2, "February" },
-        { 3, "March" },
-        { 4, "April" },
-        { 5, "May" },
-        { 6, "June" },
-        { 7, "July" },
-        { 8, "August" },
-        { 9, "September" },
-        { 10, "October" },
-        { 11, "November" },
-        { 12, "December" }
-    };
-    
-    private string GetMonthName(int? month)
-    {
-        if (month.HasValue && monthNames.ContainsKey(month.Value))
-            return monthNames[month.Value];
-        return month?.ToString() ?? "Select Month";
-    }
-    
     // Pagination options
-    private int[] pageSizeOptions = new int[] { 10, 20, 50, 100 };
+    private int[] pageSizeOptions = new int[] { 200, 300, 500, 1000 };
 
     // Dropdown filter variables
     private List<string> businessUnitOptions = new();
@@ -260,54 +218,81 @@ public partial class Forecasts : ComponentBase
 
     private async Task LoadData()
     {
+        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Refreshing Data...", Duration = 1000 });
         forecasts = await ForecastService.GetForecastsAsync();
         ApplyFilters();
+        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Data Refreshed", Duration = 2000 });
     }
 
     private void ApplyFilters()
     {
         if (forecasts == null) return;
 
-        var filtered = forecasts.AsEnumerable();
+        // Convert to ViewModel first to allow filtering on flattened properties
+        var query = forecasts.Select(ForecastViewModel.FromDto);
 
         if (!string.IsNullOrWhiteSpace(ClientFilter))
-            filtered = filtered.Where(f => f.Client.Contains(ClientFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.Client.Contains(ClientFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(CustomerFilter))
-            filtered = filtered.Where(f => f.Customer.Contains(CustomerFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.Customer.Contains(CustomerFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(ProjectFilter))
-            filtered = filtered.Where(f => f.Project.Contains(ProjectFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.Project.Contains(ProjectFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(SizeFilter))
-            filtered = filtered.Where(f => f.SizeProject.Equals(SizeFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.SizeProject.Equals(SizeFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(GoFindFilter))
-            filtered = filtered.Where(f => f.GoFind.Equals(GoFindFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.GoFind.Equals(GoFindFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(CommentFilter))
-            filtered = filtered.Where(f => f.Comment.Contains(CommentFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.Comment.Contains(CommentFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(AccountNoFilter))
-            filtered = filtered.Where(f => f.AccountNo.Contains(AccountNoFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.AccountNo.Contains(AccountNoFilter, StringComparison.OrdinalIgnoreCase));
 
         if (!string.IsNullOrWhiteSpace(DepartmentNoFilter))
-            filtered = filtered.Where(f => f.DepartmentNo.Contains(DepartmentNoFilter, StringComparison.OrdinalIgnoreCase));
+            query = query.Where(f => f.DepartmentNo.Contains(DepartmentNoFilter, StringComparison.OrdinalIgnoreCase));
 
-        // Filter by Year and Month in Actuals
-        if (YearFilter.HasValue || MonthFilter.HasValue)
+        // Apply monthly filters
+        foreach (var filter in monthlyFilters)
         {
-            filtered = filtered.Where(f => f.Actuals.Any(a =>
-                (!YearFilter.HasValue || a.Year == YearFilter.Value) &&
-                (!MonthFilter.HasValue || a.Month == MonthFilter.Value)
-            ));
+            if (filter.Value.HasValue)
+            {
+                var property = typeof(ForecastViewModel).GetProperty(filter.Key);
+                if (property != null)
+                {
+                    query = query.Where(f => 
+                    {
+                        var value = property.GetValue(f) as decimal?;
+                        return value.HasValue && value.Value == filter.Value.Value;
+                    });
+                }
+            }
         }
 
-        filteredForecasts = filtered.ToList();
+        filteredForecasts = query.ToList();
         StateHasChanged();
     }
 
-    private async Task EditRow(ForecastDto forecast)
+    // Monthly filter logic
+    private Dictionary<string, decimal?> monthlyFilters = new();
+
+    private void OnMonthlyFilterChanged(string month, decimal? value)
+    {
+        if (monthlyFilters.ContainsKey(month))
+        {
+            monthlyFilters[month] = value;
+        }
+        else
+        {
+            monthlyFilters.Add(month, value);
+        }
+        ApplyFilters();
+    }
+
+    private async Task EditRow(ForecastViewModel forecast)
     {
         if (grid != null)
         {
@@ -315,7 +300,7 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private async Task SaveRow(ForecastDto forecast)
+    private async Task SaveRow(ForecastViewModel forecast)
     {
         if (grid != null)
         {
@@ -323,7 +308,7 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private void CancelEdit(ForecastDto forecast)
+    private void CancelEdit(ForecastViewModel forecast)
     {
         if (grid != null)
         {
@@ -331,7 +316,7 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private async Task DeleteRowClick(ForecastDto forecast)
+    private async Task DeleteRowClick(ForecastViewModel forecast)
     {
         try
         {
@@ -387,7 +372,7 @@ public partial class Forecasts : ComponentBase
     {
         if (grid != null)
         {
-            var newForecast = new ForecastDto 
+            var newForecast = new ForecastViewModel 
             { 
                 Client = "",
                 Customer = "",
@@ -402,16 +387,18 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private async Task OnRowUpdate(ForecastDto forecast)
+    private async Task OnRowUpdate(ForecastViewModel forecast)
     {
         try
         {
+            // Convert ViewModel back to DTO
+            var forecastDto = forecast.ToDto();
             ForecastDto? updated;
             
             if (forecast.Id == 0)
             {
                 // New row
-                updated = await ForecastService.CreateForecastAsync(forecast);
+                updated = await ForecastService.CreateForecastAsync(forecastDto);
                 if (updated != null)
                 {
                     forecast.Id = updated.Id;
@@ -421,7 +408,7 @@ public partial class Forecasts : ComponentBase
             else
             {
                 // Existing row
-                updated = await ForecastService.UpdateForecastAsync(forecast.Id, forecast);
+                updated = await ForecastService.UpdateForecastAsync(forecast.Id, forecastDto);
                 NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Forecast updated successfully", Duration = 4000 });
             }
             
@@ -433,7 +420,7 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private async Task OnRowCreate(ForecastDto forecast)
+    private async Task OnRowCreate(ForecastViewModel forecast)
     {
         await OnRowUpdate(forecast);
     }
