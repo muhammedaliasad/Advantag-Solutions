@@ -5,15 +5,15 @@ VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Domain\Domain.csproj", "{EA144FEF-0D2B-4E3C-8C81-FC3510C9B406}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvAsmPlanning.Domain", "src\AdvAsmPlanning.Domain\AdvAsmPlanning.Domain.csproj", "{EA144FEF-0D2B-4E3C-8C81-FC3510C9B406}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infrastructure\Infrastructure.csproj", "{9D271524-EB48-4182-8AD9-88C6E2EF1DB6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvAsmPlanning.Infrastructure", "src\AdvAsmPlanning.Infrastructure\AdvAsmPlanning.Infrastructure.csproj", "{9D271524-EB48-4182-8AD9-88C6E2EF1DB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "src\API\API.csproj", "{332C1947-C692-49BF-8CA7-86ED3BBF578D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvAsmPlanning.API", "src\AdvAsmPlanning.API\AdvAsmPlanning.API.csproj", "{332C1947-C692-49BF-8CA7-86ED3BBF578D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "src\Client\Client.csproj", "{1E4F53EF-0778-4ABB-8F45-9A4D2BE9BF0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvAsmPlanning.Client", "src\AdvAsmPlanning.Client\AdvAsmPlanning.Client.csproj", "{1E4F53EF-0778-4ABB-8F45-9A4D2BE9BF0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Application\Application.csproj", "{5BDAB160-5258-45DA-1CDF-4BFCF367E785}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdvAsmPlanning.Application", "src\AdvAsmPlanning.Application\AdvAsmPlanning.Application.csproj", "{5BDAB160-5258-45DA-1CDF-4BFCF367E785}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
