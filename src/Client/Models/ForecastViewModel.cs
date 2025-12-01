@@ -15,7 +15,7 @@ public class ForecastViewModel
     public int? Delta { get; set; }
     public string AccountNo { get; set; } = string.Empty;
     public string DepartmentNo { get; set; } = string.Empty;
-    
+
     // Keep original Actuals for editing purposes
     public List<ForecastActualDto> Actuals { get; set; } = new();
 
@@ -119,7 +119,7 @@ public class ForecastViewModel
                 {
                     var property = typeof(ForecastViewModel).GetProperty(propertyName);
                     var value = (decimal?)property?.GetValue(this);
-                    
+
                     if (value.HasValue && value.Value != 0)
                     {
                         // Find existing actual or create new one

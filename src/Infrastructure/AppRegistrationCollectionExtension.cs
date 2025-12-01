@@ -10,28 +10,29 @@ using Microsoft.OpenApi.Models;
 
 namespace Infrastructure;
 
-public static class DependencyInjection
+public static class AppRegistrationCollectionExtension
 {
-    public static void AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static void RegisterAppDatabase(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name);
-            }), ServiceLifetime.Scoped);
+                options.UseSqlServer(connectionString, sqlOptions =>
+                {
+                    sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.GetName().Name);
+                }), ServiceLifetime.Scoped);
+    }
 
+    // Dependency Injection
+    public static void RegisterAppServices(this IServiceCollection services)
+    {
         // Add Application Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-        // Add Application Services
-        services.AddScoped<ISalesService, SalesService>();
 
         // Dropdown service registration
         services.AddScoped<IDropdownService, DropdownService>();
 
         // Auth service
         services.AddSingleton<IAuthService, AuthService>();
-        
+
         // Forecast service registration
         services.AddScoped<IForecastService, ForecastService>();
     }

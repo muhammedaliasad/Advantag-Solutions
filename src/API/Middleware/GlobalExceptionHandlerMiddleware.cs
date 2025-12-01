@@ -32,8 +32,8 @@ public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<Glob
 
         var response = new
         {
-            StatusCode = context.Response.StatusCode,
-            Message = exception.Message
+            context.Response.StatusCode,
+            exception.Message
         };
 
         var jsonResponse = JsonSerializer.Serialize(response);

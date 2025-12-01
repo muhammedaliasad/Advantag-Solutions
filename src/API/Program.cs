@@ -12,7 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Register Application Services
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection")!);
+builder.Services.RegisterAppDatabase(builder.Configuration.GetConnectionString("DefaultConnection")!);
+builder.Services.RegisterAppServices();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Swagger with JWT
@@ -66,7 +67,7 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.MigrateAsync().GetAwaiter().GetResult();
-    
+
     // Seed Forecast data if it doesn't exist
     await ForecastDataSeeder.SeedForecastsAsync(context);
 }

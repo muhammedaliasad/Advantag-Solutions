@@ -1,9 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Infrastructure.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Infrastructure.Services;
 
@@ -12,15 +12,15 @@ public class AuthService(IConfiguration configuration) : IAuthService
     public string GenerateToken(long userId, IEnumerable<string> roles)
     {
         var key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? throw new InvalidOperationException("Jwt:Key missing"));
-        
+
         var issuer = configuration["Jwt:Issuer"] ?? "ExampleIssuer";
         var audience = configuration["Jwt:Audience"] ?? "ExampleAudience";
 
-        var claims = new List<Claim>
-        {
+        List<Claim> claims =
+        [
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-        };
+        ];
 
         foreach (var role in roles)
         {

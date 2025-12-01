@@ -1,37 +1,28 @@
 using Domain.Entities;
 using Infrastructure.Interfaces;
-using Infrastructure.Repositories;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services;
 
-public class DropdownService : IDropdownService
+public class DropdownService(IRepository<Dropdown> repository) : IDropdownService
 {
-    private readonly IRepository<Dropdown> _repository;
-
-    public DropdownService(IRepository<Dropdown> repository)
-    {
-        _repository = repository;
-    }
-
     public async Task<IEnumerable<Dropdown>> GetAllAsync(string key)
     {
         if (string.IsNullOrEmpty(key))
-            return await _repository.GetAllAsync();
+            return await repository.GetAllAsync();
 
-        return await _repository.FindAsync(d => d.Key == key);
+        return await repository.FindAsync(d => d.Key == key);
     }
 
-    public async Task<Dropdown?> GetByIdAsync(long id) => await _repository.GetByIdAsync(id);
+    public async Task<Dropdown?> GetByIdAsync(long id) => await repository.GetByIdAsync(id);
 
-    public async Task AddAsync(Dropdown dto) => await _repository.AddAsync(dto);
+    public async Task AddAsync(Dropdown dto) => await repository.AddAsync(dto);
 
-    public async Task UpdateAsync(Dropdown dto) { _repository.Update(dto); await Task.CompletedTask; }
+    public async Task UpdateAsync(Dropdown dto) { repository.Update(dto); await Task.CompletedTask; }
 
     public async Task RemoveAsync(long id)
     {
-        var entity = await _repository.GetByIdAsync(id);
+        var entity = await repository.GetByIdAsync(id);
         if (entity is not null)
-            _repository.Remove(entity);
+            repository.Remove(entity);
     }
 }

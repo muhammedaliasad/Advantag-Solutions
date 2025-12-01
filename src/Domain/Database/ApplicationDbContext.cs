@@ -24,10 +24,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .WithOne(d => d.Parent)
             .HasForeignKey(d => d.ParentId)
             .OnDelete(DeleteBehavior.Restrict);
-        modelBuilder.Entity<Sale>()
-                    .Property(s => s.Amount)
-                    .HasPrecision(18, 2); // total digits = 18, decimals = 2
-
 
         modelBuilder.Entity<Forecast>()
             .HasMany(f => f.Actuals)

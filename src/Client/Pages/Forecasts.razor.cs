@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
 using System.Net.Http.Json;
-using System.Reflection;
 
 namespace Client.Pages;
 
@@ -81,7 +80,7 @@ public partial class Forecasts : ComponentBase
     // Dropdown filter options
     private List<string> sizeOptions = new() { "Small", "Medium", "Large", "Extra Large" };
     private List<string> goFindOptions = new() { "Yes", "No", "Pending" };
-    
+
     // Pagination options
     private int[] pageSizeOptions = new int[] { 200, 300, 500, 1000 };
 
@@ -120,7 +119,7 @@ public partial class Forecasts : ComponentBase
         try
         {
             var httpClient = HttpClientFactory.CreateClient("ASMClient");
-            
+
             // Load all dropdown options in parallel
             var tasks = new[]
             {
@@ -263,7 +262,7 @@ public partial class Forecasts : ComponentBase
                 var property = typeof(ForecastViewModel).GetProperty(filter.Key);
                 if (property != null)
                 {
-                    query = query.Where(f => 
+                    query = query.Where(f =>
                     {
                         var value = property.GetValue(f) as decimal?;
                         return value.HasValue && value.Value == filter.Value.Value;
@@ -321,7 +320,7 @@ public partial class Forecasts : ComponentBase
         try
         {
             Console.WriteLine($"DeleteRowClick called for forecast ID: {forecast?.Id}");
-            
+
             if (forecast == null)
             {
                 Console.WriteLine("Forecast is null!");
@@ -332,19 +331,19 @@ public partial class Forecasts : ComponentBase
             Console.WriteLine($"Calling DialogService.Confirm for client: {forecast.Client}");
             var confirm = await DialogService.Confirm($"Are you sure you want to delete forecast for {forecast.Client}?", "Delete Forecast", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
             Console.WriteLine($"Dialog result: {confirm}");
-            
+
             if (confirm == true)
             {
                 Console.WriteLine("User confirmed deletion, calling DeleteForecastAsync");
                 var success = await ForecastService.DeleteForecastAsync(forecast.Id);
                 Console.WriteLine($"DeleteForecastAsync result: {success}");
-                
+
                 if (success)
                 {
                     // Reload data from server to ensure consistency
                     await LoadData();
                     NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Forecast deleted successfully", Duration = 4000 });
-                    
+
                     if (grid != null)
                     {
                         await grid.Reload();
@@ -372,8 +371,8 @@ public partial class Forecasts : ComponentBase
     {
         if (grid != null)
         {
-            var newForecast = new ForecastViewModel 
-            { 
+            var newForecast = new ForecastViewModel
+            {
                 Client = "",
                 Customer = "",
                 Project = "",
@@ -382,7 +381,7 @@ public partial class Forecasts : ComponentBase
                 Comment = "",
                 Actuals = new List<ForecastActualDto>()
             };
-            
+
             await grid.InsertRow(newForecast);
         }
     }
@@ -394,7 +393,7 @@ public partial class Forecasts : ComponentBase
             // Convert ViewModel back to DTO
             var forecastDto = forecast.ToDto();
             ForecastDto? updated;
-            
+
             if (forecast.Id == 0)
             {
                 // New row
@@ -411,7 +410,7 @@ public partial class Forecasts : ComponentBase
                 updated = await ForecastService.UpdateForecastAsync(forecast.Id, forecastDto);
                 NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Forecast updated successfully", Duration = 4000 });
             }
-            
+
             await LoadData();
         }
         catch (Exception ex)

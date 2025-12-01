@@ -6,27 +6,20 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ForecastController : ControllerBase
+public class ForecastController(IForecastService forecastService) : ControllerBase
 {
-    private readonly IForecastService _forecastService;
-
-    public ForecastController(IForecastService forecastService)
-    {
-        _forecastService = forecastService;
-    }
-
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ForecastDto>>> GetAll()
     {
-        var forecasts = await _forecastService.GetAllAsync();
+        var forecasts = await forecastService.GetAllAsync();
         return Ok(forecasts);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<ForecastDto>> GetById(long id)
     {
-        var forecast = await _forecastService.GetByIdAsync(id);
-        
+        var forecast = await forecastService.GetByIdAsync(id);
+
         if (forecast == null)
             return NotFound();
 
@@ -39,7 +32,7 @@ public class ForecastController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var created = await _forecastService.CreateAsync(forecastDto);
+        var created = await forecastService.CreateAsync(forecastDto);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
 
@@ -49,8 +42,8 @@ public class ForecastController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var updated = await _forecastService.UpdateAsync(id, forecastDto);
-        
+        var updated = await forecastService.UpdateAsync(id, forecastDto);
+
         if (updated == null)
             return NotFound();
 
@@ -60,8 +53,8 @@ public class ForecastController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(long id)
     {
-        var deleted = await _forecastService.DeleteAsync(id);
-        
+        var deleted = await forecastService.DeleteAsync(id);
+
         if (!deleted)
             return NotFound();
 

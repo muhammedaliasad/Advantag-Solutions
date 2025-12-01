@@ -6,18 +6,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public class ForecastService : IForecastService
+public class ForecastService(ApplicationDbContext context) : IForecastService
 {
-    private readonly ApplicationDbContext _context;
-
-    public ForecastService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<IEnumerable<ForecastDto>> GetAllAsync()
     {
-        var forecasts = await _context.Forecasts
+        var forecasts = await context.Forecasts
             .Include(f => f.Actuals)
             .ToListAsync();
 
@@ -26,7 +19,7 @@ public class ForecastService : IForecastService
 
     public async Task<ForecastDto?> GetByIdAsync(long id)
     {
-        var forecast = await _context.Forecasts
+        var forecast = await context.Forecasts
             .Include(f => f.Actuals)
             .FirstOrDefaultAsync(f => f.Id == id);
 
@@ -59,15 +52,15 @@ public class ForecastService : IForecastService
             });
         }
 
-        _context.Forecasts.Add(forecast);
-        await _context.SaveChangesAsync();
+        context.Forecasts.Add(forecast);
+        await context.SaveChangesAsync();
 
         return MapToDto(forecast);
     }
 
     public async Task<ForecastDto?> UpdateAsync(long id, ForecastDto forecastDto)
     {
-        var forecast = await _context.Forecasts
+        var forecast = await context.Forecasts
             .Include(f => f.Actuals)
             .FirstOrDefaultAsync(f => f.Id == id);
 
@@ -87,8 +80,8 @@ public class ForecastService : IForecastService
         forecast.UpdatedAt = DateTime.UtcNow;
 
         // Update actuals (simple approach: remove all and add new)
-        _context.ForecastActuals.RemoveRange(forecast.Actuals);
-        
+        context.ForecastActuals.RemoveRange(forecast.Actuals);
+
         foreach (var actualDto in forecastDto.Actuals)
         {
             forecast.Actuals.Add(new ForecastActual
@@ -100,20 +93,20 @@ public class ForecastService : IForecastService
             });
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return MapToDto(forecast);
     }
 
     public async Task<bool> DeleteAsync(long id)
     {
-        var forecast = await _context.Forecasts.FindAsync(id);
-        
+        var forecast = await context.Forecasts.FindAsync(id);
+
         if (forecast == null)
             return false;
 
-        _context.Forecasts.Remove(forecast);
-        await _context.SaveChangesAsync();
+        context.Forecasts.Remove(forecast);
+        await context.SaveChangesAsync();
 
         return true;
     }
