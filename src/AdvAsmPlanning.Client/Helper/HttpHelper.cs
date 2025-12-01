@@ -31,7 +31,6 @@ public class HttpHelper(IHttpClientFactory clientFactory, IJSRuntime jsRuntime)
         }
         catch (Exception e)
         {
-
             throw;
         }
     }

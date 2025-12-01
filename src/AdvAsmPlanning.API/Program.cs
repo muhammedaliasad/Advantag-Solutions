@@ -14,7 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Register Application Services
 builder.Services.RegisterAppDatabase(builder.Configuration.GetConnectionString("DefaultConnection")!);
 builder.Services.RegisterAppServices();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Swagger with JWT
 builder.Services.ConfigureSwaggerJwtAuthentication();
