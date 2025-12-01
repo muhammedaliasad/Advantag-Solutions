@@ -44,8 +44,15 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Advantag Solutions API v1");
+        c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+    });
 }
+
+// Global Exception Handler (after Swagger to avoid interfering with Swagger requests)
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("*");
@@ -58,7 +65,10 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
+    context.Database.MigrateAsync().GetAwaiter().GetResult();
+    
+    // Seed Forecast data if it doesn't exist
+    await ForecastDataSeeder.SeedForecastsAsync(context);
 }
 
 app.Run();

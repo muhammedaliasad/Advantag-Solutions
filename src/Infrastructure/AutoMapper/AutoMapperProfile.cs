@@ -1,6 +1,4 @@
-﻿using Application.DTOs;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
 
 namespace Infrastructure.AutoMapper
 {
@@ -8,7 +6,6 @@ namespace Infrastructure.AutoMapper
     {
         internal AutoMapperProfile()
         {
-            CreateMap<Sale, SaleDto>();
         }
     }
 }

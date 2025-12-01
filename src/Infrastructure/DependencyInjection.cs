@@ -31,6 +31,9 @@ public static class DependencyInjection
 
         // Auth service
         services.AddSingleton<IAuthService, AuthService>();
+        
+        // Forecast service registration
+        services.AddScoped<IForecastService, ForecastService>();
     }
 
     public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)

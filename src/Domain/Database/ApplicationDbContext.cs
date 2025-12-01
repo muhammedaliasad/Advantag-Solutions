@@ -11,7 +11,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     {
     }
 
-    public DbSet<Sale> Sales { get; set; } = null!;
+    public DbSet<Forecast> Forecasts { get; set; } = null!;
+    public DbSet<ForecastActual> ForecastActuals { get; set; } = null!;
     public DbSet<Dropdown> Dropdowns { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +28,16 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
                     .Property(s => s.Amount)
                     .HasPrecision(18, 2); // total digits = 18, decimals = 2
 
+
+        modelBuilder.Entity<Forecast>()
+            .HasMany(f => f.Actuals)
+            .WithOne()
+            .HasForeignKey(a => a.ForecastId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ForecastActual>()
+            .Property(a => a.Amount)
+            .HasPrecision(18, 2);
 
         DataSeed.Seed(modelBuilder);
     }

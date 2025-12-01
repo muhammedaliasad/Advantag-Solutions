@@ -1,0 +1,698 @@
+@page "/forecasts"
+@using Application.DTOs
+@using Radzen
+@using Radzen.Blazor
+@using System.Linq
+@layout EmptyLayout
+
+<PageTitle>Forecasts</PageTitle>
+
+<style>
+    /* Ensure column headers display full text without truncation */
+    .rz-column-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-weight: bold !important;
+    }
+    
+    .rz-grid-table th {
+        white-space: nowrap !important;
+        font-weight: bold !important;
+    }
+</style>
+
+<div style="padding: 2rem;">
+    <h1>Forecasts</h1>
+
+    @if (forecasts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <!-- Dropdown Key Filters -->
+        <div style="margin-bottom: 1.5rem; padding: 1rem; background-color: #f8f9fa; border-radius: 4px;">
+            <h3 style="margin-bottom: 1rem; font-size: 1rem; font-weight: 600;">Filters</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Business Unit</label>
+                    <RadzenDropDown TValue="string" Data="@businessUnitOptions" Value="@businessUnitFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Business Unit..." 
+                                   ValueChanged="@OnBusinessUnitFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Division</label>
+                    <RadzenDropDown TValue="string" Data="@divisionOptions" Value="@divisionFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Division..." 
+                                   ValueChanged="@OnDivisionFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Market</label>
+                    <RadzenDropDown TValue="string" Data="@marketOptions" Value="@marketFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Market..." 
+                                   ValueChanged="@OnMarketFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Department Name</label>
+                    <RadzenDropDown TValue="string" Data="@departmentNameOptions" Value="@departmentNameFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Department Name..." 
+                                   ValueChanged="@OnDepartmentNameFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Department Range</label>
+                    <RadzenDropDown TValue="string" Data="@departmentRangeOptions" Value="@departmentRangeFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Department Range..." 
+                                   ValueChanged="@OnDepartmentRangeFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account External Report</label>
+                    <RadzenDropDown TValue="string" Data="@accountExternalReportOptions" Value="@accountExternalReportFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account External Report..." 
+                                   ValueChanged="@OnAccountExternalReportFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Group</label>
+                    <RadzenDropDown TValue="string" Data="@accountGroupOptions" Value="@accountGroupFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Group..." 
+                                   ValueChanged="@OnAccountGroupFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account SubGroup</label>
+                    <RadzenDropDown TValue="string" Data="@accountSubGroupOptions" Value="@accountSubGroupFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account SubGroup..." 
+                                   ValueChanged="@OnAccountSubGroupFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Name</label>
+                    <RadzenDropDown TValue="string" Data="@accountNameOptions" Value="@accountNameFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Name..." 
+                                   ValueChanged="@OnAccountNameFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Account Range</label>
+                    <RadzenDropDown TValue="string" Data="@accountRangeOptions" Value="@accountRangeFilter" 
+                                   AllowClear="true" AllowFiltering="true" 
+                                   FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                   Placeholder="Select Account Range..." 
+                                   ValueChanged="@OnAccountRangeFilterChanged" 
+                                   Style="width:100%" />
+                </div>
+            </div>
+        </div>
+
+
+        <RadzenDataGrid @ref="grid" Data="@filteredForecasts" TItem="ForecastViewModel" 
+                        AllowFiltering="true" 
+                        FilterMode="FilterMode.Advanced"
+                        AllowPaging="true" 
+                        PageSize="200"
+                        PageSizeOptions="@pageSizeOptions"
+                        PagerPosition="PagerPosition.Top"
+                        PagerAlwaysVisible="true"
+                        ShowPagingSummary="true"
+                        PagingSummaryFormat="Showing {0} - {1} of {2} forecasts"
+                        AllowSorting="true"
+                        EditMode="DataGridEditMode.Single"
+                        RowUpdate="@OnRowUpdate"
+                        RowCreate="@OnRowCreate"
+                        ColumnWidth="150px">
+            <HeaderTemplate>
+                <RadzenButton Text="ADD" Icon="add_circle_outline" Click="@InsertRow" />
+                <RadzenButton Icon="refresh" Click="@LoadData" Style="margin-left: 10px;" />
+            </HeaderTemplate>
+            <Columns>
+                <RadzenDataGridColumn TItem="ForecastViewModel" Context="forecast" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="156px">
+                    <Template Context="forecast">
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRow(forecast))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Click="@(args => DeleteRowClick(forecast))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRow(forecast))">
+                        </RadzenButton>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(forecast))">
+                        </RadzenButton>
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Id" Title="ID" Filterable="false" Sortable="true" Width="80px">
+                    <Template Context="data">
+                        @data.Id
+                    </Template>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="AccountNo" Title="Account No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@AccountNoFilter" ValueChanged="@OnAccountNoFilterChanged" Style="width:100%" Placeholder="Search account..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.AccountNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="DepartmentNo" Title="Department No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@DepartmentNoFilter" ValueChanged="@OnDepartmentNoFilterChanged" Style="width:100%" Placeholder="Search department..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.DepartmentNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Client" Title="Client" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@ClientFilter" ValueChanged="@OnClientFilterChanged" Style="width:100%" Placeholder="Search client..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Client" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Customer" Title="Customer" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@CustomerFilter" ValueChanged="@OnCustomerFilterChanged" Style="width:100%" Placeholder="Search customer..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Customer" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Project" Title="Project" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@ProjectFilter" ValueChanged="@OnProjectFilterChanged" Style="width:100%" Placeholder="Search project..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Project" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="SizeProject" Title="Size" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@SizeFilter" 
+                                       Data="@sizeOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search size..."
+                                       Change="@OnSizeFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.SizeProject" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="GoFind" Title="GoFind" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@GoFindFilter" 
+                                       Data="@goFindOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search GoFind..."
+                                       Change="@OnGoFindFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.GoFind" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Comment" Title="Comment" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@CommentFilter" ValueChanged="@OnCommentFilterChanged" Style="width:100%" Placeholder="Search comment..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="forecast">
+                        <RadzenTextBox @bind-Value="forecast.Comment" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2023 *@
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jan2023" Title="Jan-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jan2023") ? monthlyFilters["Jan2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jan2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jan2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Feb2023" Title="Feb-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Feb2023") ? monthlyFilters["Feb2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Feb2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Feb2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Mar2023" Title="Mar-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Mar2023") ? monthlyFilters["Mar2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Mar2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Mar2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Apr2023" Title="Apr-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Apr2023") ? monthlyFilters["Apr2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Apr2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Apr2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="May2023" Title="May-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("May2023") ? monthlyFilters["May2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.May2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.May2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jun2023" Title="Jun-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jun2023") ? monthlyFilters["Jun2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jun2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jun2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jul2023" Title="Jul-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jul2023") ? monthlyFilters["Jul2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jul2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jul2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Aug2023" Title="Aug-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Aug2023") ? monthlyFilters["Aug2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Aug2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Aug2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Sep2023" Title="Sep-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Sep2023") ? monthlyFilters["Sep2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Sep2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Sep2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Oct2023" Title="Oct-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Oct2023") ? monthlyFilters["Oct2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Oct2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Oct2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Nov2023" Title="Nov-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Nov2023") ? monthlyFilters["Nov2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Nov2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Nov2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Dec2023" Title="Dec-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Dec2023") ? monthlyFilters["Dec2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Dec2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Dec2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2024 *@
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jan2024" Title="Jan-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jan2024") ? monthlyFilters["Jan2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jan2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jan2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Feb2024" Title="Feb-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Feb2024") ? monthlyFilters["Feb2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Feb2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Feb2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Mar2024" Title="Mar-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Mar2024") ? monthlyFilters["Mar2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Mar2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Mar2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Apr2024" Title="Apr-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Apr2024") ? monthlyFilters["Apr2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Apr2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Apr2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="May2024" Title="May-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("May2024") ? monthlyFilters["May2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.May2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.May2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jun2024" Title="Jun-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jun2024") ? monthlyFilters["Jun2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jun2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jun2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jul2024" Title="Jul-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jul2024") ? monthlyFilters["Jul2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jul2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jul2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Aug2024" Title="Aug-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Aug2024") ? monthlyFilters["Aug2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Aug2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Aug2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Sep2024" Title="Sep-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Sep2024") ? monthlyFilters["Sep2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Sep2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Sep2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Oct2024" Title="Oct-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Oct2024") ? monthlyFilters["Oct2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Oct2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Oct2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Nov2024" Title="Nov-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Nov2024") ? monthlyFilters["Nov2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Nov2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Nov2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Dec2024" Title="Dec-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Dec2024") ? monthlyFilters["Dec2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Dec2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Dec2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2025 *@
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jan2025" Title="Jan-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jan2025") ? monthlyFilters["Jan2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jan2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jan2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Feb2025" Title="Feb-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Feb2025") ? monthlyFilters["Feb2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Feb2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Feb2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Mar2025" Title="Mar-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Mar2025") ? monthlyFilters["Mar2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Mar2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Mar2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Apr2025" Title="Apr-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Apr2025") ? monthlyFilters["Apr2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Apr2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Apr2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="May2025" Title="May-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("May2025") ? monthlyFilters["May2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.May2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.May2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jun2025" Title="Jun-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jun2025") ? monthlyFilters["Jun2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jun2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jun2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Jul2025" Title="Jul-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Jul2025") ? monthlyFilters["Jul2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Jul2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Jul2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Aug2025" Title="Aug-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Aug2025") ? monthlyFilters["Aug2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Aug2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Aug2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Sep2025" Title="Sep-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Sep2025") ? monthlyFilters["Sep2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Sep2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Sep2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Oct2025" Title="Oct-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Oct2025") ? monthlyFilters["Oct2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Oct2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Oct2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Nov2025" Title="Nov-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Nov2025") ? monthlyFilters["Nov2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Nov2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Nov2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="ForecastViewModel" Property="Dec2025" Title="Dec-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(monthlyFilters.ContainsKey("Dec2025") ? monthlyFilters["Dec2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="data">
+                        @(data.Dec2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="forecast">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="forecast.Dec2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+
+    }
+</div>
+
