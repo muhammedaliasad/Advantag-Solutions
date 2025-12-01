@@ -27,7 +27,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         modelBuilder.Entity<Forecast>()
             .HasMany(f => f.Actuals)
-            .WithOne()
+            .WithOne(a => a.Forecast)
             .HasForeignKey(a => a.ForecastId)
             .OnDelete(DeleteBehavior.Cascade);
 

@@ -1,12 +1,13 @@
+using AdvAsmPlanning.Application;
 using AdvAsmPlanning.Application.DTOs;
 
 namespace AdvAsmPlanning.Infrastructure.Interfaces;
 
 public interface IForecastService
 {
-    Task<IEnumerable<ForecastDto>> GetAllAsync();
-    Task<ForecastDto?> GetByIdAsync(long id);
-    Task<ForecastDto> CreateAsync(ForecastDto forecastDto);
-    Task<ForecastDto?> UpdateAsync(ForecastDto forecastDto);
-    Task<bool> DeleteAsync(long id);
+    Task<ApiResponseDto<IEnumerable<ForecastDto>>> GetAllAsync();
+    Task<ApiResponseDto<ForecastDto>> GetByIdAsync(long id);
+    Task<ApiResponseDto<ForecastDto>> CreateAsync(ForecastDto forecastDto);
+    Task<ApiResponseDto<ForecastDto>> UpdateAsync(ForecastDto forecastDto);
+    Task<ApiResponse> DeleteAsync(long id);
 }

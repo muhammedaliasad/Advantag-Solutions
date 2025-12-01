@@ -11,10 +11,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Register AutoMapper (ensure profiles are discovered)
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Register Application Services
 builder.Services.RegisterAppDatabase(builder.Configuration.GetConnectionString("DefaultConnection")!);
 builder.Services.RegisterAppServices();
-//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Swagger with JWT
 builder.Services.ConfigureSwaggerJwtAuthentication();

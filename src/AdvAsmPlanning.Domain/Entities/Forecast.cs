@@ -1,9 +1,12 @@
-using System.Collections.ObjectModel;
-
 namespace AdvAsmPlanning.Domain.Entities;
 
 public class Forecast : BaseEntity
 {
+    public Forecast()
+    {
+        Actuals = new List<ForecastActual>();
+    }
+
     public string Client { get; set; } = string.Empty;
     public string Customer { get; set; } = string.Empty;
     public string SizeProject { get; set; } = string.Empty;
@@ -14,5 +17,5 @@ public class Forecast : BaseEntity
     public string AccountNo { get; set; } = string.Empty;
     public string DepartmentNo { get; set; } = string.Empty;
 
-    public ICollection<ForecastActual> Actuals { get; set; } = new Collection<ForecastActual>();
+    public virtual ICollection<ForecastActual> Actuals { get; set; }
 }

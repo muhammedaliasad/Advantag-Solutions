@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Domain.Migrations
+namespace AdvAsmPlanning.Domain.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration

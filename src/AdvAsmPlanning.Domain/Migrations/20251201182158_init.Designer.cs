@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Domain.Migrations
+namespace AdvAsmPlanning.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251201073440_init")]
+    [Migration("20251201182158_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace Domain.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.ApplicationRole", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +64,7 @@ namespace Domain.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.ApplicationUser", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,7 +150,7 @@ namespace Domain.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Dropdown", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.Dropdown", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -588,7 +588,7 @@ namespace Domain.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.Forecast", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.Forecast", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -642,7 +642,7 @@ namespace Domain.Migrations
                     b.ToTable("Forecasts");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ForecastActual", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.ForecastActual", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -786,9 +786,9 @@ namespace Domain.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Dropdown", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.Dropdown", b =>
                 {
-                    b.HasOne("Domain.Entities.Dropdown", "Parent")
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.Dropdown", "Parent")
                         .WithMany("Children")
                         .HasForeignKey("ParentId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -796,18 +796,20 @@ namespace Domain.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ForecastActual", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.ForecastActual", b =>
                 {
-                    b.HasOne("Domain.Entities.Forecast", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.Forecast", "Forecast")
                         .WithMany("Actuals")
                         .HasForeignKey("ForecastId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Forecast");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationRole", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -816,7 +818,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<long>", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -825,7 +827,7 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -834,13 +836,13 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationRole", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -849,19 +851,19 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
                 {
-                    b.HasOne("Domain.Entities.ApplicationUser", null)
+                    b.HasOne("AdvAsmPlanning.Domain.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Dropdown", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.Dropdown", b =>
                 {
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Forecast", b =>
+            modelBuilder.Entity("AdvAsmPlanning.Domain.Entities.Forecast", b =>
                 {
                     b.Navigation("Actuals");
                 });

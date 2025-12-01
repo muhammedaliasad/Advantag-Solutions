@@ -11,56 +11,21 @@ public class ForecastController(IForecastService forecastService) : ControllerBa
 {
     [HttpPost(nameof(GetAll))]
     public async Task<ActionResult<ApiResponseDto<IEnumerable<ForecastDto>>>> GetAll()
-    {
-        var forecasts = await forecastService.GetAllAsync();
-        var result = ApiResponseDto<IEnumerable<ForecastDto>>.SuccessResponse(forecasts, forecasts.LongCount());
-        return Ok(result);
-    }
+        => Ok(await forecastService.GetAllAsync());
 
     [HttpPost(nameof(GetById))]
     public async Task<ActionResult<ApiResponseDto<ForecastDto>>> GetById([FromBody] long id)
-    {
-        var forecast = await forecastService.GetByIdAsync(id);
-
-        if (forecast == null)
-            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
-
-        return Ok(ApiResponseDto<ForecastDto>.SuccessResponse(forecast, 1));
-    }
+        => Ok(await forecastService.GetByIdAsync(id));
 
     [HttpPost(nameof(Create))]
     public async Task<ActionResult<ApiResponseDto<ForecastDto>>> Create([FromBody] ForecastDto forecastDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse.FailureResponse("Invalid model state"));
-
-        var created = await forecastService.CreateAsync(forecastDto);
-        var result = ApiResponseDto<ForecastDto>.SuccessResponse(created, 1);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, result);
-    }
+        => await forecastService.CreateAsync(forecastDto);
 
     [HttpPost(nameof(Update))]
     public async Task<ActionResult<ApiResponseDto<ForecastDto>>> Update([FromBody] ForecastDto forecastDto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ApiResponse.FailureResponse("Invalid model state"));
-
-        var updated = await forecastService.UpdateAsync(forecastDto);
-
-        if (updated == null)
-            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
-
-        return Ok(ApiResponseDto<ForecastDto>.SuccessResponse(updated, 1));
-    }
+        => await forecastService.UpdateAsync(forecastDto);
 
     [HttpPost(nameof(Delete))]
     public async Task<ActionResult<ApiResponse>> Delete([FromBody] long id)
-    {
-        var deleted = await forecastService.DeleteAsync(id);
-
-        if (!deleted)
-            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
-
-        return Ok(ApiResponse.SuccessResponse("Forecast deleted", totalRecords: 0));
-    }
+        => Ok(await forecastService.DeleteAsync(id));
 }
