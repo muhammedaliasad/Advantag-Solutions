@@ -7,7 +7,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class AuthController(IAuthService authService) : ControllerBase
 {
-    [HttpGet("token")]
+    [HttpPost("token")]
     public ActionResult<string> GetToken()
     {
         long userId = 1002;
