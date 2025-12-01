@@ -23,7 +23,7 @@ public class ForecastController(IForecastService forecastService) : ControllerBa
         var forecast = await forecastService.GetByIdAsync(id);
 
         if (forecast == null)
-            return NotFound(ApiResponseDto.FailureResponse("Forecast not found"));
+            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
 
         return Ok(ApiResponseDto<ForecastDto>.SuccessResponse(forecast, 1));
     }
@@ -32,7 +32,7 @@ public class ForecastController(IForecastService forecastService) : ControllerBa
     public async Task<ActionResult<ApiResponseDto<ForecastDto>>> Create([FromBody] ForecastDto forecastDto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ApiResponseDto.FailureResponse("Invalid model state"));
+            return BadRequest(ApiResponse.FailureResponse("Invalid model state"));
 
         var created = await forecastService.CreateAsync(forecastDto);
         var result = ApiResponseDto<ForecastDto>.SuccessResponse(created, 1);
@@ -43,24 +43,24 @@ public class ForecastController(IForecastService forecastService) : ControllerBa
     public async Task<ActionResult<ApiResponseDto<ForecastDto>>> Update([FromBody] ForecastDto forecastDto)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ApiResponseDto.FailureResponse("Invalid model state"));
+            return BadRequest(ApiResponse.FailureResponse("Invalid model state"));
 
         var updated = await forecastService.UpdateAsync(forecastDto);
 
         if (updated == null)
-            return NotFound(ApiResponseDto.FailureResponse("Forecast not found"));
+            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
 
         return Ok(ApiResponseDto<ForecastDto>.SuccessResponse(updated, 1));
     }
 
     [HttpPost(nameof(Delete))]
-    public async Task<ActionResult<ApiResponseDto>> Delete([FromBody] long id)
+    public async Task<ActionResult<ApiResponse>> Delete([FromBody] long id)
     {
         var deleted = await forecastService.DeleteAsync(id);
 
         if (!deleted)
-            return NotFound(ApiResponseDto.FailureResponse("Forecast not found"));
+            return NotFound(ApiResponse.FailureResponse("Forecast not found"));
 
-        return Ok(ApiResponseDto.SuccessResponse("Forecast deleted", totalRecords: 0));
+        return Ok(ApiResponse.SuccessResponse("Forecast deleted", totalRecords: 0));
     }
 }

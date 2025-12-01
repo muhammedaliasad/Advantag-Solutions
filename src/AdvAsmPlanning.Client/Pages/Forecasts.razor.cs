@@ -338,7 +338,7 @@ public partial class Forecasts : ComponentBase
             if (confirm == true)
             {
                 // Use the correct PostAsync overload and route format
-                var response = await HttpHelper.PostAsync<ApiResponseDto>(ApiRoutes.DeleteForecast, forecast.Id);
+                var response = await HttpHelper.PostAsync<ApiResponse>(ApiRoutes.DeleteForecast, forecast.Id);
 
                 if (response != null && response.Success)
                 {

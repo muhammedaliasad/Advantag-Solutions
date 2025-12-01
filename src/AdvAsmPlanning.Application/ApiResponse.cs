@@ -1,6 +1,6 @@
 ﻿namespace AdvAsmPlanning.Application;
 
-public class ApiResponseDto
+public class ApiResponse
 {
     public bool Success { get; set; }
     public string Message { get; set; } = string.Empty;
@@ -8,7 +8,7 @@ public class ApiResponseDto
 
     public long TotalRecords { get; set; }
 
-    public static ApiResponseDto SuccessResponse(string message = "", long totalRecords = 0, long totalPages = 0)
+    public static ApiResponse SuccessResponse(string message = "", long totalRecords = 0, long totalPages = 0)
         => new()
         {
             Success = true,
@@ -16,7 +16,7 @@ public class ApiResponseDto
             TotalRecords = totalRecords
         };
 
-    public static ApiResponseDto FailureResponse(string message)
+    public static ApiResponse FailureResponse(string message)
         => new()
         {
             Success = false,
@@ -24,7 +24,7 @@ public class ApiResponseDto
         };
 }
 
-public class ApiResponseDto<T> : ApiResponseDto
+public class ApiResponseDto<T> : ApiResponse
 {
     // Optional data of type T (supports nullable reference and value types)
     public T? Data { get; set; } = default!;

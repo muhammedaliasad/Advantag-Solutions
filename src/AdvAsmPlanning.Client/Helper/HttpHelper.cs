@@ -16,23 +16,24 @@ public class HttpHelper(IHttpClientFactory clientFactory, IJSRuntime jsRuntime)
     public async Task<TResult?> PostAsync<TResult>(string url, object? payload = null)
     {
         var requestMessage = await CreateRequestMessageAsync(url, HttpMethod.Post, payload);
-        try
-        {
-            var response = await _httpClient.SendAsync(requestMessage);
-            return await HandleResponse<TResult>(response);
-        }
-        catch (Exception e)
-        {
-            throw;
-        }
+        var response = await _httpClient.SendAsync(requestMessage);
+        return await HandleResponse<TResult>(response);
     }
 
     // Generic POST that distinguishes payload and result types
     public async Task<TResult?> PostAsync<TPayload, TResult>(string url, TPayload? content = default)
     {
-        var requestMessage = await CreateRequestMessageAsync(url, HttpMethod.Post, content);
-        var response = await _httpClient.SendAsync(requestMessage);
-        return await HandleResponse<TResult>(response);
+        try
+        {
+            var requestMessage = await CreateRequestMessageAsync(url, HttpMethod.Post, content);
+            var response = await _httpClient.SendAsync(requestMessage);
+            return await HandleResponse<TResult>(response);
+        }
+        catch (Exception e)
+        {
+
+            throw;
+        }
     }
 
     // Helper method to create the HTTP request message
