@@ -1,12 +1,9 @@
-using AdvAsmPlanning.Domain.Entities;
+using AdvAsmPlanning.Application;
+using AdvAsmPlanning.Application.DTOs;
 
 namespace AdvAsmPlanning.Infrastructure.Interfaces;
 
 public interface IDropdownService
 {
-    Task<IEnumerable<Dropdown>> GetAllAsync(string key);
-    Task<Dropdown?> GetByIdAsync(long id);
-    Task AddAsync(Dropdown dto);
-    Task UpdateAsync(Dropdown dto);
-    Task RemoveAsync(long id);
+    Task<ApiResponseDto<IEnumerable<DropdownDto>>> GetAllAsync(string key);
 }

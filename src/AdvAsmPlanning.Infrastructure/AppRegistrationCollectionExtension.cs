@@ -28,9 +28,6 @@ public static class AppRegistrationCollectionExtension
         // Add Application Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-        // Dropdown service registration
-        services.AddScoped<IDropdownService, DropdownService>();
-
         // Auth service
         services.AddSingleton<IAuthService, AuthService>();
 
@@ -41,10 +38,7 @@ public static class AppRegistrationCollectionExtension
         services.AddScoped<IPlanningScenarioService, PlanningScenarioService>();
 
         // Account service registration
-        services.AddScoped<IAccountService, AccountService>();
-        
-        // Department service registration
-        services.AddScoped<IDepartmentService, DepartmentService>();
+        services.AddScoped<IDropdownService, DropdownService>();
     }
 
     public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)

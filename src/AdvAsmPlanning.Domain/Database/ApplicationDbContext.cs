@@ -13,7 +13,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     public DbSet<Forecast> Forecasts { get; set; } = null!;
     public DbSet<ForecastActual> ForecastActuals { get; set; } = null!;
-    public DbSet<Dropdown> Dropdowns { get; set; } = null!;
     public DbSet<PlanningScenario> PlanningScenarios { get; set; } = null!;
 
     public DbSet<Account> Account { get; set; } = null!;
@@ -22,12 +21,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Dropdown>()
-            .HasMany(d => d.Children)
-            .WithOne(d => d.Parent)
-            .HasForeignKey(d => d.ParentId)
-            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Forecast>()
             .HasMany(f => f.Actuals)

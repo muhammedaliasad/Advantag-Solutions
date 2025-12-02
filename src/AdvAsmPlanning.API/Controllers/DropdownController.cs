@@ -1,48 +1,22 @@
-using AdvAsmPlanning.Domain.Entities;
+﻿using AdvAsmPlanning.Application.DTOs;
 using AdvAsmPlanning.Infrastructure.Interfaces;
+using AdvAsmPlanning.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
-namespace AdvAsmPlanning.API.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class DropdownController(IDropdownService service) : ControllerBase
+namespace AdvAsmPlanning.API.Controllers
 {
-    [HttpPost("GetAll")]
-    public async Task<ActionResult<IEnumerable<Dropdown>>> GetAll([Required][FromBody] string key)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DropdownController(IDropdownService _dropdownService) : ControllerBase
     {
-        var list = await service.GetAllAsync(key);
-        return Ok(list);
-    }
 
-    [HttpGet("{id:long}")]
-    public async Task<ActionResult<Dropdown>> Get(long id)
-    {
-        var dto = await service.GetByIdAsync(id);
-        if (dto is null) return NotFound();
-        return Ok(dto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create(Dropdown dto)
-    {
-        await service.AddAsync(dto);
-        return CreatedAtAction(nameof(Get), new { id = dto.Id }, dto);
-    }
-
-    [HttpPut("{id:long}")]
-    public async Task<IActionResult> Update(long id, Dropdown dto)
-    {
-        if (id != dto.Id) return BadRequest();
-        await service.UpdateAsync(dto);
-        return NoContent();
-    }
-
-    [HttpDelete("{id:long}")]
-    public async Task<IActionResult> Delete(long id)
-    {
-        await service.RemoveAsync(id);
-        return NoContent();
+        /// <summary>
+        /// Get distinct dropdown values for Account based on key
+        /// </summary>
+        /// <param name="key">Column name to filter distinct values</param>
+        /// <returns>List of DropDownDto</returns>
+        [HttpPost("GetByKey")]
+        public async Task<ActionResult<IEnumerable<DropdownDto>>> GetDropdown([FromBody] string key)
+            => Ok(await _dropdownService.GetAllAsync(key));
     }
 }
