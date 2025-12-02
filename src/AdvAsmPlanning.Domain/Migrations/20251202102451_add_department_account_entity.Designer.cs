@@ -4,6 +4,7 @@ using AdvAsmPlanning.Domain.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AdvAsmPlanning.Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251202102451_add_department_account_entity")]
+    partial class add_department_account_entity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,9 +40,126 @@ namespace AdvAsmPlanning.Domain.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Alias")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBoardorGAAP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBranch")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CBusinessUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CComponent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CCountry")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CDateAcquired")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CDivision")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CEntity")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CFinanceOwner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CGroup")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CHRBusinessPartner")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CIncludedInBoard")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CIncludedInGAAP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CInitialOrganicPeriod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CIsLeaf")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMPCCurrency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMarket")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COMSRevenueAccountCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COperatingSegment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COperatingUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COrganizationGroup1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COrganizationGroup2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COrganizationGroup3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CPartition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CPassthrough")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CPeriodAcquired")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CPshReportRollup")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CSalesLeader")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CSegment")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
@@ -53,103 +173,19 @@ namespace AdvAsmPlanning.Domain.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("c_BoardorGAAP")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Branch")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_BusinessUnit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Component")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("c_DateAcquired")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("c_Division")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Entity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_FinanceOwner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Group")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_HRBusinessPartner")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_IncludedInBoard")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_IncludedInGAAP")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_InitialOrganicPeriod")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_IsLeaf")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_MPCCurrency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Market")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OMSRevenueAccountCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OperatingSegment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OperatingUnit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OrganizationGroup1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OrganizationGroup2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OrganizationGroup3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Partition")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Passthrough")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_PeriodAcquired")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_PshReportRollup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_SalesLeader")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_Segment")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("MemberId");
 
@@ -165,9 +201,11 @@ namespace AdvAsmPlanning.Domain.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("MemberId"));
 
                     b.Property<string>("AccountCategory")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AccountType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ActivatedOn")
@@ -177,12 +215,122 @@ namespace AdvAsmPlanning.Domain.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Alias")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CAccountFunction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CAccountSubgroup")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CAcctWaterfall")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CAllocationRollup")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CDemoSubgroup1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CDemoSubgroup2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CDemoSubgroup3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CEBITDARollup")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CExtReport")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CFLUXRollup1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CFLUXRollup2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CForeignCurrencyRevaluation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CGAAP_NONGAAP")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CIsSuspended")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMockEPML1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMockEPML2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMockEPML3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CMockEPML4")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CNavisionGLCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COMSRevenueAccountCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("COMSRevenueAccountDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CRollupLevel0")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CRollupLevel1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CRollupLevel2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CSAP_GL_Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CSalesRollupLevel2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("CSignMultiplier")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Code")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedOn")
@@ -192,100 +340,23 @@ namespace AdvAsmPlanning.Domain.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DebitCredit")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("c_AccountFunction")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_AccountSubgroup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_AcctWaterfall")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_AllocationRollup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_DemoSubgroup1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_DemoSubgroup2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_DemoSubgroup3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_EBITDARollup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_ExtReport")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_FLUXRollup1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_FLUXRollup2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_ForeignCurrencyRevaluation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_GAAP_NONGAAP")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_IsSuspended")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_MockEPML1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_MockEPML2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_MockEPML3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_MockEPML4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_NavisionGLCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OMSRevenueAccountCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_OMSRevenueAccountDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_RollupLevel0")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_RollupLevel1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_RollupLevel2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_SAP_GL_Code")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("c_SalesRollupLevel2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("c_SignMultiplier")
-                        .HasColumnType("bigint");
 
                     b.HasKey("MemberId");
 

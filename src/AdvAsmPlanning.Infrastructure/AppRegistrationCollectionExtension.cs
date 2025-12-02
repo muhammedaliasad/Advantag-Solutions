@@ -36,6 +36,12 @@ public static class AppRegistrationCollectionExtension
 
         // Forecast service registration
         services.AddScoped<IForecastService, ForecastService>();
+
+        // Account service registration
+        services.AddScoped<IAccountService, AccountService>();
+        
+        // Department service registration
+        services.AddScoped<IDepartmentService, DepartmentService>();
     }
 
     public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)
