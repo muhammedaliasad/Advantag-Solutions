@@ -152,7 +152,7 @@ public partial class Forecasts : ComponentBase
             var response = await httpClient.PostAsJsonAsync("api/Dropdown/GetAll", key);
             if (response.IsSuccessStatusCode)
             {
-                var dropdowns = await response.Content.ReadFromJsonAsync<List<DropdownDto>>();
+                var dropdowns = await response.Content.ReadFromJsonAsync<List<Models.DropdownDto>>();
                 if (dropdowns != null)
                 {
                     targetList.Clear();
