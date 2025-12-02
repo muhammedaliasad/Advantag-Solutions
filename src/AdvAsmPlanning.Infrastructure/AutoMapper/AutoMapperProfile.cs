@@ -4,9 +4,9 @@ using AutoMapper;
 
 namespace AdvAsmPlanning.Infrastructure.AutoMapper
 {
-    internal class AutoMapperProfile : Profile
+    public class AutoMapperProfile : Profile
     {
-        internal AutoMapperProfile()
+        public AutoMapperProfile()
         {
             CreateMap<Forecast, ForecastDto>()
                 .ForMember(dest => dest.Actuals, opt => opt.MapFrom(src => src.Actuals));
@@ -18,6 +18,15 @@ namespace AdvAsmPlanning.Infrastructure.AutoMapper
                 .ForMember(dest => dest.Actuals, opt => opt.MapFrom(src => src.Actuals));
 
             CreateMap<ForecastActualDto, ForecastActual>();
+
+            // Planning Scenario mappings
+            CreateMap<PlanningScenario, PlanningScenarioDto>()
+                .ForMember(dest => dest.CreatedTime, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.LastUpdatedTime, opt => opt.MapFrom(src => src.UpdatedAt));
+
+            CreateMap<PlanningScenarioDto, PlanningScenario>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedTime))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.LastUpdatedTime));
         }
     }
 }

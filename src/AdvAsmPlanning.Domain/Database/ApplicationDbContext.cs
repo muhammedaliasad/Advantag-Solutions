@@ -14,6 +14,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Forecast> Forecasts { get; set; } = null!;
     public DbSet<ForecastActual> ForecastActuals { get; set; } = null!;
     public DbSet<Dropdown> Dropdowns { get; set; } = null!;
+    public DbSet<PlanningScenario> PlanningScenarios { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -36,6 +36,9 @@ public static class AppRegistrationCollectionExtension
 
         // Forecast service registration
         services.AddScoped<IForecastService, ForecastService>();
+
+        // Planning Scenario service registration
+        services.AddScoped<IPlanningScenarioService, PlanningScenarioService>();
     }
 
     public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)

@@ -46,7 +46,6 @@ var app = builder.Build();
 app.UseCors("*");
 
 // Middleware
-app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -57,7 +56,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Global Exception Handler (after Swagger to avoid interfering with Swagger requests)
+// Global Exception Handler
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
@@ -74,6 +73,9 @@ using (var scope = app.Services.CreateScope())
 
     // Seed Forecast data if it doesn't exist
     await ForecastDataSeeder.SeedForecastsAsync(context);
+
+    // Seed Planning Scenario data if it doesn't exist
+    await PlanningScenarioDataSeeder.SeedPlanningScenarios(context);
 }
 
 app.Run();
