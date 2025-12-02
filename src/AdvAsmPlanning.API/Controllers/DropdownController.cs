@@ -1,22 +1,28 @@
-﻿using AdvAsmPlanning.Application.DTOs;
+﻿using AdvAsmPlanning.Application;
+using AdvAsmPlanning.Application.Constants;
+using AdvAsmPlanning.Application.DTOs;
 using AdvAsmPlanning.Infrastructure.Interfaces;
-using AdvAsmPlanning.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdvAsmPlanning.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DropdownController(IDropdownService _dropdownService) : ControllerBase
+    public class DropdownController(IDropdownService dropdownService) : ControllerBase
     {
-
         /// <summary>
-        /// Get distinct dropdown values for Account based on key
+        /// Get distinct dropdown values for Account based on key.
         /// </summary>
-        /// <param name="key">Column name to filter distinct values</param>
-        /// <returns>List of DropDownDto</returns>
-        [HttpPost("GetByKey")]
-        public async Task<ActionResult<IEnumerable<DropdownDto>>> GetDropdown([FromBody] string key)
-            => Ok(await _dropdownService.GetAllAsync(key));
+        /// <param name="key">Dropdown key (one of the enum values)</param>
+        /// <returns>ApiResponseDto containing list of DropdownResponseDto</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(ApiResponseDto<IEnumerable<DropdownResponseDto>>), 200)]
+        public async Task<IActionResult> GetDropdown([FromQuery] DropdownKey key)
+        {
+            var result = await dropdownService.GetAllAsync(key);
+            if (!result.Success)
+                return BadRequest(result);
+            return Ok(result);
+        }
     }
 }

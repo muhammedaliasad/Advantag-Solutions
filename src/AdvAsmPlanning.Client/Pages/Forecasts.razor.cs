@@ -1,4 +1,5 @@
 using AdvAsmPlanning.Application;
+using AdvAsmPlanning.Application.Constants;
 using AdvAsmPlanning.Application.DTOs;
 using AdvAsmPlanning.Client.Constants;
 using AdvAsmPlanning.Client.Helper;
@@ -122,19 +123,16 @@ public partial class Forecasts : ComponentBase
         {
             var httpClient = HttpClientFactory.CreateClient("ASMClient");
 
-            // Load all dropdown options in parallel
-            var tasks = new[]
+            // Load dropdowns that are supported by the new enum-based endpoint
+            var tasks = new List<Task>
             {
-                LoadDropdownOptions(httpClient, "BusinessUnit", businessUnitOptions),
-                LoadDropdownOptions(httpClient, "Division", divisionOptions),
-                LoadDropdownOptions(httpClient, "Market", marketOptions),
-                LoadDropdownOptions(httpClient, "DepartmentName", departmentNameOptions),
-                LoadDropdownOptions(httpClient, "DepartmentRange", departmentRangeOptions),
-                LoadDropdownOptions(httpClient, "AccountExternalReport", accountExternalReportOptions),
-                LoadDropdownOptions(httpClient, "AccountGroup", accountGroupOptions),
-                LoadDropdownOptions(httpClient, "AccountSubGroup", accountSubGroupOptions),
-                LoadDropdownOptions(httpClient, "AccountName", accountNameOptions),
-                LoadDropdownOptions(httpClient, "AccountRange", accountRangeOptions)
+                LoadDropdownOptions(httpClient, DropdownKey.BusinessUnit, businessUnitOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.Division, divisionOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.Market, marketOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.AccountExternalReport, accountExternalReportOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.AccountGroup, accountGroupOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.AccountSubGroup, accountSubGroupOptions),
+                LoadDropdownOptions(httpClient, DropdownKey.AccountName, accountNameOptions)
             };
 
             await Task.WhenAll(tasks);
@@ -145,19 +143,16 @@ public partial class Forecasts : ComponentBase
         }
     }
 
-    private async Task LoadDropdownOptions(HttpClient httpClient, string key, List<string> targetList)
+    private async Task LoadDropdownOptions(HttpClient httpClient, DropdownKey key, List<string> model)
     {
         try
         {
-            var response = await httpClient.PostAsJsonAsync("api/Dropdown/GetAll", key);
-            if (response.IsSuccessStatusCode)
+            string url = string.Format(ApiRoutes.DeleteForecast, key);
+            var response = await httpClient.GetFromJsonAsync<ApiResponseDto<IEnumerable<DropdownResponseDto>>>(url);
+            if (response != null && response.Success && response.Data != null)
             {
-                var dropdowns = await response.Content.ReadFromJsonAsync<List<Models.DropdownDto>>();
-                if (dropdowns != null)
-                {
-                    targetList.Clear();
-                    targetList.AddRange(dropdowns.Select(d => d.Label));
-                }
+                model.Clear();
+                model.AddRange(response.Data.Select(s => s.Label));
             }
         }
         catch (Exception ex)

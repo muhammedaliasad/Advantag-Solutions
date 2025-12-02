@@ -42,8 +42,8 @@ public class PlanningScenarioService(ApplicationDbContext context, IMapper mappe
         await context.SaveChangesAsync();
 
         return ApiResponseDto<PlanningScenarioDto>.SuccessResponse(
-            _mapper.Map<PlanningScenarioDto>(scenario), 
-            1, 
+            _mapper.Map<PlanningScenarioDto>(scenario),
+            1,
             "Planning Scenario created successfully.");
     }
 
@@ -57,12 +57,12 @@ public class PlanningScenarioService(ApplicationDbContext context, IMapper mappe
 
         _mapper.Map(dto, scenario);
         scenario.UpdatedAt = DateTime.UtcNow;
-        
+
         await context.SaveChangesAsync();
 
         return ApiResponseDto<PlanningScenarioDto>.SuccessResponse(
-            _mapper.Map<PlanningScenarioDto>(scenario), 
-            1, 
+            _mapper.Map<PlanningScenarioDto>(scenario),
+            1,
             "Planning Scenario updated successfully.");
     }
 

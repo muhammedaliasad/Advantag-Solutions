@@ -196,7 +196,7 @@ public partial class PlanningScenarios
                 var response = await HttpHelper.PostAsync<PlanningScenarioDto, ApiResponseDto<PlanningScenarioDto>>(
                     ApiRoutes.CreatePlanningScenario,
                     scenario);
-                
+
                 if (response?.Success == true)
                 {
                     scenario.Id = response.Data.Id;
@@ -215,9 +215,9 @@ public partial class PlanningScenarios
                 var response = await HttpHelper.PostAsync<PlanningScenarioDto, ApiResponseDto<PlanningScenarioDto>>(
                     ApiRoutes.UpdatePlanningScenario,
                     scenario);
-                
+
                 updated = response?.Data;
-                
+
                 if (response?.Success == true)
                 {
                     ShowNotification("Success", "Planning scenario updated successfully", NotificationSeverity.Success);
