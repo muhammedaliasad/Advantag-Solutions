@@ -1,9 +1,7 @@
 using AdvAsmPlanning.Application;
 using AdvAsmPlanning.Application.DTOs;
 using AdvAsmPlanning.Domain.Database;
-using AdvAsmPlanning.Domain.Entities;
 using AdvAsmPlanning.Infrastructure.Interfaces;
-using AutoMapper;
 
 namespace AdvAsmPlanning.Infrastructure.Services;
 

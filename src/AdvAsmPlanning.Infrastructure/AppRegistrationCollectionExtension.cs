@@ -37,16 +37,14 @@ public static class AppRegistrationCollectionExtension
         // Forecast service registration
         services.AddScoped<IForecastService, ForecastService>();
 
-<<<<<<< HEAD
         // Planning Scenario service registration
         services.AddScoped<IPlanningScenarioService, PlanningScenarioService>();
-=======
+
         // Account service registration
         services.AddScoped<IAccountService, AccountService>();
         
         // Department service registration
         services.AddScoped<IDepartmentService, DepartmentService>();
->>>>>>> dropdownChange
     }
 
     public static void ConfigureSwaggerJwtAuthentication(this IServiceCollection services)
