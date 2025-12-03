@@ -1,0 +1,10 @@
+﻿global using AdvAsmPlanning.Application.DTOs;
+global using AdvAsmPlanning.Client;
+global using AdvAsmPlanning.Client.Helper;
+global using Blazored.LocalStorage;
+global using Microsoft.AspNetCore.Components.Web;
+global using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+global using Microsoft.JSInterop;
+global using Radzen;
+global using System.Net.Http.Headers;
+global using System.Net.Http.Json;

@@ -1,11 +1,8 @@
-using AdvAsmPlanning.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
 namespace AdvAsmPlanning.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class SampleAuthController(IAuthService authService) : ControllerBase
 {
     [HttpPost("token")]
     public ActionResult<string> GetToken()

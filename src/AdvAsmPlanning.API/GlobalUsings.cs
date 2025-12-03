@@ -1,0 +1,13 @@
+﻿global using AdvAsmPlanning.API.Middleware;
+global using AdvAsmPlanning.Application;
+global using AdvAsmPlanning.Application.Constants;
+global using AdvAsmPlanning.Application.DTOs;
+global using AdvAsmPlanning.Domain.Database;
+global using AdvAsmPlanning.Domain.Entities;
+global using AdvAsmPlanning.Infrastructure;
+global using AdvAsmPlanning.Infrastructure.Interfaces;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.EntityFrameworkCore;
+global using System.Net;
+global using System.Text.Json;

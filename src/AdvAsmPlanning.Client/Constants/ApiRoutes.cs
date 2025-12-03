@@ -13,6 +13,6 @@ public static class ApiRoutes
     public const string CreatePlanningScenario = "PlanningScenario/Create";
     public const string UpdatePlanningScenario = "PlanningScenario/Update";
     public const string DeletePlanningScenario = "PlanningScenario/Delete";
-    
+
     public const string GetDropdownByKey = "Dropdown?key={0}";
 }

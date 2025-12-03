@@ -1,6 +1,3 @@
-using AdvAsmPlanning.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-
 namespace AdvAsmPlanning.Domain.Database;
 
 public static class ForecastDataSeeder

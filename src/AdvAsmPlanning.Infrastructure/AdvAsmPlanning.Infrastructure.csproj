@@ -1,6 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <Compile Remove="Swagger\**" />
+    <EmbeddedResource Remove="Swagger\**" />
+    <None Remove="Swagger\**" />
+  </ItemGroup>
+
+  <ItemGroup>
         <PackageReference Include="AutoMapper" Version="14.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
@@ -10,10 +16,6 @@
   <ItemGroup>
     <ProjectReference Include="..\AdvAsmPlanning.Application\AdvAsmPlanning.Application.csproj" />
     <ProjectReference Include="..\AdvAsmPlanning.Domain\AdvAsmPlanning.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Swagger\" />
   </ItemGroup>
 
   <PropertyGroup>

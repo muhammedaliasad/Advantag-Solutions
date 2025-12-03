@@ -1,8 +1,3 @@
-using AdvAsmPlanning.Application;
-using AdvAsmPlanning.Application.DTOs;
-using AdvAsmPlanning.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-
 namespace AdvAsmPlanning.API.Controllers;
 
 [ApiController]

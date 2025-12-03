@@ -1,10 +1,3 @@
-using AdvAsmPlanning.Application;
-using AdvAsmPlanning.Application.Constants;
-using AdvAsmPlanning.Application.DTOs;
-using AdvAsmPlanning.Domain.Database;
-using AdvAsmPlanning.Domain.Entities;
-using AdvAsmPlanning.Infrastructure.Interfaces;
-
 namespace AdvAsmPlanning.Infrastructure.Services;
 
 public class DropdownService(IRepository<Account> accountRepository, IRepository<Department> departmentRepository) : IDropdownService

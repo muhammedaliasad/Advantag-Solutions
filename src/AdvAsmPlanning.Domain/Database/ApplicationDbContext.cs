@@ -1,7 +1,3 @@
-using AdvAsmPlanning.Domain.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-
 namespace AdvAsmPlanning.Domain.Database;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, long>

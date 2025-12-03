@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AdvAsmPlanning.Domain.Entities;
+﻿namespace AdvAsmPlanning.Domain.Entities;
 
 public class Account
 {

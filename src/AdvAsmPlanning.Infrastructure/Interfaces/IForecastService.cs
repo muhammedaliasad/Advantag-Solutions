@@ -1,6 +1,3 @@
-using AdvAsmPlanning.Application;
-using AdvAsmPlanning.Application.DTOs;
-
 namespace AdvAsmPlanning.Infrastructure.Interfaces;
 
 public interface IForecastService

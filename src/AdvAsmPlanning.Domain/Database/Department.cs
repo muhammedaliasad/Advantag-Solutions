@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace AdvAsmPlanning.Domain.Database;
+﻿namespace AdvAsmPlanning.Domain.Database;
 
 public class Department
 {

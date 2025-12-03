@@ -1,8 +1,4 @@
-﻿using AdvAsmPlanning.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
-namespace AdvAsmPlanning.Domain.Database;
+﻿namespace AdvAsmPlanning.Domain.Database;
 
 public static class DataSeed
 {

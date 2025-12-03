@@ -1,6 +1,3 @@
-using System.Net;
-using System.Text.Json;
-
 namespace AdvAsmPlanning.API.Middleware;
 
 public class GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)

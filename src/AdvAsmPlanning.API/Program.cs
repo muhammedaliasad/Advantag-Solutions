@@ -1,10 +1,3 @@
-using AdvAsmPlanning.API.Middleware;
-using AdvAsmPlanning.Domain.Database;
-using AdvAsmPlanning.Domain.Entities;
-using AdvAsmPlanning.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Services

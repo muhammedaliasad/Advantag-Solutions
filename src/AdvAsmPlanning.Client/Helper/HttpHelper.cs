@@ -1,7 +1,3 @@
-using Microsoft.JSInterop;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-
 namespace AdvAsmPlanning.Client.Helper;
 
 public class HttpHelper(IHttpClientFactory clientFactory, IJSRuntime jsRuntime)

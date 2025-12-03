@@ -1,5 +1,3 @@
-using AdvAsmPlanning.Application.DTOs;
-
 namespace AdvAsmPlanning.Client.Models;
 
 public class ForecastViewModel

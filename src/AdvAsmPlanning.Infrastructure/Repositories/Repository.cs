@@ -1,8 +1,3 @@
-using AdvAsmPlanning.Domain.Database;
-using AdvAsmPlanning.Infrastructure.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-
 namespace AdvAsmPlanning.Infrastructure.Repositories;
 
 public class Repository<TEntity> : IRepository<TEntity> where TEntity : class

@@ -1,14 +1,3 @@
-using AdvAsmPlanning.Domain.Database;
-using AdvAsmPlanning.Infrastructure.Interfaces;
-using AdvAsmPlanning.Infrastructure.Repositories;
-using AdvAsmPlanning.Infrastructure.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
-
-
 namespace AdvAsmPlanning.Infrastructure;
 
 public static class AppRegistrationCollectionExtension

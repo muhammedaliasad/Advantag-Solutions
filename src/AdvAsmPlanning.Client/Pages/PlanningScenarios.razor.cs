@@ -1,9 +1,6 @@
 using AdvAsmPlanning.Application;
-using AdvAsmPlanning.Application.DTOs;
 using AdvAsmPlanning.Client.Constants;
-using AdvAsmPlanning.Client.Helper;
 using Microsoft.AspNetCore.Components;
-using Radzen;
 using Radzen.Blazor;
 
 namespace AdvAsmPlanning.Client.Pages;
