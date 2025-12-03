@@ -20,11 +20,11 @@ public static class AppRegistrationCollectionExtension
         // Auth service
         services.AddSingleton<IAuthService, AuthService>();
 
-        // Forecast service registration
-        services.AddScoped<IForecastService, ForecastService>();
+        // MainGrid service registration
+        services.AddScoped<IMainGridService, MainGridService>();
 
-        // Planning Scenario service registration
-        services.AddScoped<IPlanningScenarioService, PlanningScenarioService>();
+        // Scenario service registration
+        services.AddScoped<IScenarioService, ScenarioService>();
 
         // Account service registration
         services.AddScoped<IDropdownService, DropdownService>();

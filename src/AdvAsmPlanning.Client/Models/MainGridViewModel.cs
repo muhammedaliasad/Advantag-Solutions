@@ -1,8 +1,8 @@
 namespace AdvAsmPlanning.Client.Models;
 
-public class ForecastViewModel
+public class MainGridViewModel
 {
-    // Original ForecastDto properties
+    // Original MainGridDto properties
     public long Id { get; set; }
     public string Client { get; set; } = string.Empty;
     public string Customer { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ public class ForecastViewModel
     public string DepartmentNo { get; set; } = string.Empty;
 
     // Keep original Actuals for editing purposes
-    public List<ForecastActualDto> Actuals { get; set; } = new();
+    public List<MainGridActualDto> Actuals { get; set; } = new();
 
     // Monthly properties for 2023
     public decimal? Jan2023 { get; set; }
@@ -59,9 +59,9 @@ public class ForecastViewModel
     public decimal? Nov2025 { get; set; }
     public decimal? Dec2025 { get; set; }
 
-    public static ForecastViewModel FromDto(ForecastDto dto)
+    public static MainGridViewModel FromDto(MainGridDto dto)
     {
-        var viewModel = new ForecastViewModel
+        var viewModel = new MainGridViewModel
         {
             Id = dto.Id,
             Client = dto.Client,
@@ -82,7 +82,7 @@ public class ForecastViewModel
             var propertyName = GetPropertyNameForYearMonth(actual.Year, actual.Month);
             if (!string.IsNullOrEmpty(propertyName))
             {
-                var property = typeof(ForecastViewModel).GetProperty(propertyName);
+                var property = typeof(MainGridViewModel).GetProperty(propertyName);
                 property?.SetValue(viewModel, actual.Amount);
             }
         }
@@ -90,9 +90,9 @@ public class ForecastViewModel
         return viewModel;
     }
 
-    public ForecastDto ToDto()
+    public MainGridDto ToDto()
     {
-        var dto = new ForecastDto
+        var dto = new MainGridDto
         {
             Id = Id,
             Client = Client,
@@ -104,7 +104,7 @@ public class ForecastViewModel
             Delta = Delta,
             AccountNo = AccountNo,
             DepartmentNo = DepartmentNo,
-            Actuals = new List<ForecastActualDto>()
+            Actuals = new List<MainGridActualDto>()
         };
 
         // Convert monthly properties back to actuals
@@ -115,7 +115,7 @@ public class ForecastViewModel
                 var propertyName = GetPropertyNameForYearMonth(year, month);
                 if (!string.IsNullOrEmpty(propertyName))
                 {
-                    var property = typeof(ForecastViewModel).GetProperty(propertyName);
+                    var property = typeof(MainGridViewModel).GetProperty(propertyName);
                     var value = (decimal?)property?.GetValue(this);
 
                     if (value.HasValue && value.Value != 0)
@@ -129,7 +129,7 @@ public class ForecastViewModel
                         }
                         else
                         {
-                            dto.Actuals.Add(new ForecastActualDto
+                            dto.Actuals.Add(new MainGridActualDto
                             {
                                 Year = year,
                                 Month = month,

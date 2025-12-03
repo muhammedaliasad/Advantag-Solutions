@@ -1,10 +1,11 @@
-@page "/planning-scenarios"
-@using AdvAsmPlanning.Application.DTOs
+@page "/scenarios"
+@inherits BaseGridPage<ScenarioDto>
+@using AdvAsmPlanning.Client.Pages.Base
 @using Radzen
 @using Radzen.Blazor
 @layout EmptyLayout
 
-<PageTitle>Planning Scenarios</PageTitle>
+<PageTitle>Scenarios</PageTitle>
 
 <style>
     /* Ensure column headers display full text without truncation */
@@ -47,21 +48,21 @@
 </style>
 
 <div style="padding: 2rem;">
-    <h1>Planning Scenarios</h1>
+    <h1>Scenarios</h1>
 
-    @if (planningScenarios == null)
+    @if (_scenarios == null)
     {
         <p><em>Loading...</em></p>
     }
     else
     {
-        <RadzenDataGrid @ref="grid" 
-                        Data="@filteredScenarios" 
-                        TItem="PlanningScenarioDto"
+        <RadzenDataGrid @ref="Grid" 
+                        Data="@_filteredScenarios" 
+                        TItem="ScenarioDto"
                         AllowFiltering="true" 
                         AllowPaging="true" 
                         PageSize="50"
-                        PageSizeOptions="@pageSizeOptions"
+                        PageSizeOptions="@_pageSizeOptions"
                         PagerPosition="PagerPosition.Top"
                         PagerAlwaysVisible="true"
                         ShowPagingSummary="true"
@@ -70,17 +71,28 @@
                         AllowColumnResize="true"
                         FilterMode="FilterMode.Advanced"
                         EditMode="DataGridEditMode.Single"
-                        RowUpdate="@OnRowUpdate"
-                        RowCreate="@OnRowCreate"
-                        RowDoubleClick="@OnRowDoubleClick">
+                        RowUpdate="@OnRowUpdateAsync"
+                        RowCreate="@OnRowCreateAsync">
             <HeaderTemplate>
                 @*<RadzenButton Text="ADD" Icon="add_circle_outline" Click="@InsertRow" Disabled="@isLoading" />*@
-                <RadzenButton Icon="refresh" Click="@LoadData" Style="margin-left: 10px;" IsBusy="@isLoading" Disabled="@isLoading" />
+                <RadzenButton Icon="refresh" Click="@LoadDataAsync" Style="margin-left: 10px;" IsBusy="@IsLoading" Disabled="@IsLoading" />
             </HeaderTemplate>
             <Columns>
-                <RadzenDataGridColumn TItem="PlanningScenarioDto" Property="Code" Title="Scenario" Filterable="true" Sortable="true" MinWidth="150px">
+                <RadzenDataGridColumn TItem="ScenarioDto" Title="Action" Filterable="false" Sortable="false" Width="140px" Frozen="true">
+                    <Template Context="data">
+                        <RadzenButton Text="View" 
+                                    Icon="open_in_new" 
+                                    Size="ButtonSize.Small" 
+                                    Variant="Variant.Flat"
+                                    Click="@(() => OnOpenScenarioClickAsync(data))"
+                                    Title="View">
+                        </RadzenButton>
+                    </Template>
+                </RadzenDataGridColumn>
+
+                <RadzenDataGridColumn TItem="ScenarioDto" Property="Code" Title="Scenario" Filterable="true" Sortable="true" MinWidth="150px">
                     <FilterTemplate>
-                        <RadzenTextBox Value="@CodeFilter" ValueChanged="@OnCodeFilterChanged" Style="width:100%" Placeholder="Search scenario..." />
+                        <RadzenTextBox Value="@_codeFilter" ValueChanged="@OnCodeFilterChanged" Style="width:100%" Placeholder="Search scenario..." />
                     </FilterTemplate>
                     <Template Context="data">
                         <strong>@data.Code</strong>
@@ -91,9 +103,9 @@
                     </EditTemplate>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="PlanningScenarioDto" Property="Description" Title="Description" Filterable="true" Sortable="true" MinWidth="200px">
+                <RadzenDataGridColumn TItem="ScenarioDto" Property="Description" Title="Description" Filterable="true" Sortable="true" MinWidth="200px">
                     <FilterTemplate>
-                        <RadzenTextBox Value="@DescriptionFilter" ValueChanged="@OnDescriptionFilterChanged" Style="width:100%" Placeholder="Search description..." />
+                        <RadzenTextBox Value="@_descriptionFilter" ValueChanged="@OnDescriptionFilterChanged" Style="width:100%" Placeholder="Search description..." />
                     </FilterTemplate>
                     <Template Context="data">
                         @data.Description
@@ -104,7 +116,7 @@
                     </EditTemplate>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="PlanningScenarioDto" Property="Status" Title="Status" Filterable="false" Sortable="true" MinWidth="100px" Width="120px">
+                <RadzenDataGridColumn TItem="ScenarioDto" Property="Status" Title="Status" Filterable="false" Sortable="true" MinWidth="100px" Width="120px">
                     <Template Context="data">
                         <span class="status-badge @(data.ActualScenario ? "status-locked" : "status-unlocked")">
                             @data.Status
@@ -116,9 +128,9 @@
                     </EditTemplate>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="PlanningScenarioDto" Property="StartMessage" Title="Start Message" Filterable="true" Sortable="true" MinWidth="200px">
+                <RadzenDataGridColumn TItem="ScenarioDto" Property="StartMessage" Title="Start Message" Filterable="true" Sortable="true" MinWidth="200px">
                     <FilterTemplate>
-                        <RadzenTextBox Value="@StartMessageFilter" ValueChanged="@OnStartMessageFilterChanged" Style="width:100%" Placeholder="Search start message..." />
+                        <RadzenTextBox Value="@_startMessageFilter" ValueChanged="@OnStartMessageFilterChanged" Style="width:100%" Placeholder="Search start message..." />
                     </FilterTemplate>
                     <Template Context="data">
                         @data.StartMessage
@@ -128,9 +140,9 @@
                     </EditTemplate>
                 </RadzenDataGridColumn>
 
-                <RadzenDataGridColumn TItem="PlanningScenarioDto" Property="ConsolidationNumber" Title="Consolidation Number" Filterable="true" Sortable="true" MinWidth="150px">
+                <RadzenDataGridColumn TItem="ScenarioDto" Property="ConsolidationNumber" Title="Consolidation Number" Filterable="true" Sortable="true" MinWidth="150px">
                     <FilterTemplate>
-                        <RadzenTextBox Value="@ConsolidationNumberFilter" ValueChanged="@OnConsolidationNumberFilterChanged" Style="width:100%" Placeholder="Search consolidation number..." />
+                        <RadzenTextBox Value="@_consolidationNumberFilter" ValueChanged="@OnConsolidationNumberFilterChanged" Style="width:100%" Placeholder="Search consolidation number..." />
                     </FilterTemplate>
                     <Template Context="data">
                         @data.ConsolidationNumber

@@ -1,16 +1,16 @@
 namespace AdvAsmPlanning.Domain.Database;
 
-public static class PlanningScenarioDataSeeder
+public static class ScenarioDataSeeder
 {
-    public static async Task SeedPlanningScenarios(ApplicationDbContext context)
+    public static async Task SeedScenarios(ApplicationDbContext context)
     {
-        // Check if planning scenarios already exist
-        if (await context.PlanningScenarios.AnyAsync())
+        // Check if scenarios already exist
+        if (await context.Scenarios.AnyAsync())
         {
             return; // Data already seeded
         }
 
-        var scenarios = new List<PlanningScenario>
+        var scenarios = new List<Scenario>
         {
             new() { Code = "BUD", Description = "Budget 2024", CreatedAt = new DateTime(2018, 6, 18, 10, 58, 58, 187, DateTimeKind.Utc), UpdatedAt = new DateTime(2018, 6, 18, 10, 58, 58, 187, DateTimeKind.Utc), CubeScenarioId = -6, StartMessage = "The 2024 Budget scenario is now open.", ConsolidationNumber = "801", ActualScenario = true, FxFlag = true, PlanningScenarioGroupId = 3, PostingLayerId = 1 },
             new() { Code = "FOR", Description = "Forecast", CreatedAt = new DateTime(2018, 6, 18, 10, 59, 18, 877, DateTimeKind.Utc), UpdatedAt = new DateTime(2018, 6, 18, 10, 59, 18, 877, DateTimeKind.Utc), CubeScenarioId = -5, ConsolidationNumber = "800", ActualScenario = true, FxFlag = true, PlanningScenarioGroupId = 6, PostingLayerId = 1 },
@@ -41,7 +41,7 @@ public static class PlanningScenarioDataSeeder
             new() { Code = "LRPHEDGE", Description = "Long Range Plan Hedge", CreatedBy = "ASM\\sakerele.admin", CreatedAt = new DateTime(2023, 9, 12, 6, 20, 40, 210, DateTimeKind.Utc), LastUpdatedBy = "ASM\\sakerele.admin", UpdatedAt = new DateTime(2023, 9, 12, 6, 20, 40, 210, DateTimeKind.Utc), CubeScenarioId = -30, StartMessage = "", ConsolidationNumber = "829", ActualScenario = true, FxFlag = true, PlanningScenarioGroupId = 217, PostingLayerId = 4 }
         };
 
-        await context.PlanningScenarios.AddRangeAsync(scenarios);
+        await context.Scenarios.AddRangeAsync(scenarios);
         await context.SaveChangesAsync();
     }
 }

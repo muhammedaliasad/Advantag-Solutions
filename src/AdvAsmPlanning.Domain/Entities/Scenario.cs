@@ -1,6 +1,6 @@
 namespace AdvAsmPlanning.Domain.Entities;
 
-public class PlanningScenario : BaseEntity
+public class Scenario : BaseEntity
 {
     public string Code { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;

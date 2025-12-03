@@ -1,0 +1,602 @@
+@page "/main-grid"
+@inherits BaseGridPage<MainGridViewModel>
+@using AdvAsmPlanning.Client.Pages.Base
+@using Radzen
+@using Radzen.Blazor
+@layout EmptyLayout
+
+<PageTitle>Main Grid</PageTitle>
+
+<style>
+    /* Ensure column headers display full text without truncation */
+    .rz-column-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-weight: bold !important;
+    }
+    
+    .rz-grid-table th {
+        white-space: nowrap !important;
+        font-weight: bold !important;
+    }
+</style>
+
+<div style="padding: 2rem;">
+    <h1>@_scenarioDescription</h1>
+
+    @if (_mainGridsModel == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+
+
+        <RadzenDataGrid @ref="Grid" Data="@_filteredMainGrids" TItem="MainGridViewModel" 
+                        AllowFiltering="true" 
+                        FilterMode="FilterMode.Advanced"
+                        AllowPaging="true" 
+                        PageSize="200"
+                        PageSizeOptions="@_pageSizeOptions"
+                        PagerPosition="PagerPosition.Top"
+                        PagerAlwaysVisible="true"
+                        ShowPagingSummary="true"
+                        PagingSummaryFormat="Showing {0} - {1} of {2} mainGrids"
+                        AllowSorting="true"
+                        EditMode="DataGridEditMode.Single"
+                        RowUpdate="@OnRowUpdateAsync"
+                        RowCreate="@OnRowCreateAsync"
+                        ColumnWidth="150px">
+            <HeaderTemplate>
+                <RadzenButton Text="ADD" Icon="add_circle_outline" Click="@InsertRowAsync" />
+                <RadzenButton Icon="refresh" Click="@LoadDataAsync" Style="margin-left: 10px;" IsBusy="@IsLoading" Disabled="@IsLoading" />
+            </HeaderTemplate>
+            <Columns>
+                <RadzenDataGridColumn TItem="MainGridViewModel" Context="mainGrid" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="156px">
+                    <Template Context="mainGrid">
+                        <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => EditRowAsync(mainGrid))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Click="@(args => DeleteRowAsync(mainGrid))" @onclick:stopPropagation="true">
+                        </RadzenButton>
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => SaveRowAsync(mainGrid))">
+                        </RadzenButton>
+                        <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => CancelEdit(mainGrid))">
+                        </RadzenButton>
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Id" Title="ID" Filterable="false" Sortable="true" Width="80px">
+                    <Template Context="data">
+                        @data.Id
+                    </Template>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="AccountNo" Title="Account No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_accountNoFilter" ValueChanged="@OnAccountNoFilterChanged" Style="width:100%" Placeholder="Search account..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.AccountNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="DepartmentNo" Title="Department No" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_departmentNoFilter" ValueChanged="@OnDepartmentNoFilterChanged" Style="width:100%" Placeholder="Search department..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.DepartmentNo" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Client" Title="Client" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_clientFilter" ValueChanged="@OnClientFilterChanged" Style="width:100%" Placeholder="Search client..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.Client" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Customer" Title="Customer" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_customerFilter" ValueChanged="@OnCustomerFilterChanged" Style="width:100%" Placeholder="Search customer..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.Customer" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Project" Title="Project" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_projectFilter" ValueChanged="@OnProjectFilterChanged" Style="width:100%" Placeholder="Search project..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.Project" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="SizeProject" Title="Size" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@_sizeFilter" 
+                                       Data="@_sizeOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search size..."
+                                       Change="@OnSizeFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.SizeProject" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="GoFind" Title="GoFind" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenDropDown TValue="string" Value="@_goFindFilter" 
+                                       Data="@_goFindOptions" 
+                                       AllowClear="true"
+                                       AllowFiltering="true"
+                                       FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                       Placeholder="Search GoFind..."
+                                       Change="@OnGoFindFilterChanged"
+                                       Style="width:100%" />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.GoFind" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Comment" Title="Comment" Filterable="true" Sortable="true">
+                    <FilterTemplate>
+                        <RadzenTextBox Value="@_commentFilter" ValueChanged="@OnCommentFilterChanged" Style="width:100%" Placeholder="Search comment..." />
+                    </FilterTemplate>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenTextBox @bind-Value="mainGrid.Comment" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2023 *@
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jan2023" Title="Jan-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jan2023") ? _monthlyFilters["Jan2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jan2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jan2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Feb2023" Title="Feb-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Feb2023") ? _monthlyFilters["Feb2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Feb2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Feb2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Mar2023" Title="Mar-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Mar2023") ? _monthlyFilters["Mar2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Mar2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Mar2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Apr2023" Title="Apr-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Apr2023") ? _monthlyFilters["Apr2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Apr2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Apr2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="May2023" Title="May-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("May2023") ? _monthlyFilters["May2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.May2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.May2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jun2023" Title="Jun-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jun2023") ? _monthlyFilters["Jun2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jun2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jun2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jul2023" Title="Jul-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jul2023") ? _monthlyFilters["Jul2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jul2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jul2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Aug2023" Title="Aug-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Aug2023") ? _monthlyFilters["Aug2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Aug2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Aug2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Sep2023" Title="Sep-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Sep2023") ? _monthlyFilters["Sep2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Sep2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Sep2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Oct2023" Title="Oct-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Oct2023") ? _monthlyFilters["Oct2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Oct2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Oct2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Nov2023" Title="Nov-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Nov2023") ? _monthlyFilters["Nov2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Nov2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Nov2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Dec2023" Title="Dec-23" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Dec2023") ? _monthlyFilters["Dec2023"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2023", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Dec2023?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Dec2023" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2024 *@
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jan2024" Title="Jan-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jan2024") ? _monthlyFilters["Jan2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jan2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jan2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Feb2024" Title="Feb-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Feb2024") ? _monthlyFilters["Feb2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Feb2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Feb2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Mar2024" Title="Mar-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Mar2024") ? _monthlyFilters["Mar2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Mar2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Mar2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Apr2024" Title="Apr-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Apr2024") ? _monthlyFilters["Apr2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Apr2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Apr2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="May2024" Title="May-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("May2024") ? _monthlyFilters["May2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.May2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.May2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jun2024" Title="Jun-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jun2024") ? _monthlyFilters["Jun2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jun2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jun2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jul2024" Title="Jul-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jul2024") ? _monthlyFilters["Jul2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jul2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jul2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Aug2024" Title="Aug-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Aug2024") ? _monthlyFilters["Aug2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Aug2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Aug2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Sep2024" Title="Sep-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Sep2024") ? _monthlyFilters["Sep2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Sep2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Sep2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Oct2024" Title="Oct-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Oct2024") ? _monthlyFilters["Oct2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Oct2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Oct2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Nov2024" Title="Nov-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Nov2024") ? _monthlyFilters["Nov2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Nov2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Nov2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Dec2024" Title="Dec-24" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Dec2024") ? _monthlyFilters["Dec2024"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2024", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Dec2024?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Dec2024" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                @* Monthly columns for 2025 *@
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jan2025" Title="Jan-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jan2025") ? _monthlyFilters["Jan2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jan2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jan2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jan2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Feb2025" Title="Feb-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Feb2025") ? _monthlyFilters["Feb2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Feb2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Feb2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Feb2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Mar2025" Title="Mar-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Mar2025") ? _monthlyFilters["Mar2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Mar2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Mar2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Mar2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Apr2025" Title="Apr-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Apr2025") ? _monthlyFilters["Apr2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Apr2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Apr2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Apr2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="May2025" Title="May-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("May2025") ? _monthlyFilters["May2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("May2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.May2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.May2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jun2025" Title="Jun-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jun2025") ? _monthlyFilters["Jun2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jun2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jun2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jun2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Jul2025" Title="Jul-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Jul2025") ? _monthlyFilters["Jul2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Jul2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Jul2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Jul2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Aug2025" Title="Aug-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Aug2025") ? _monthlyFilters["Aug2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Aug2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Aug2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Aug2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Sep2025" Title="Sep-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Sep2025") ? _monthlyFilters["Sep2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Sep2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Sep2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Sep2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Oct2025" Title="Oct-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Oct2025") ? _monthlyFilters["Oct2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Oct2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Oct2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Oct2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Nov2025" Title="Nov-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Nov2025") ? _monthlyFilters["Nov2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Nov2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Nov2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Nov2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+                
+                <RadzenDataGridColumn TItem="MainGridViewModel" Property="Dec2025" Title="Dec-25" Filterable="true" Sortable="true" Width="120px">
+                    <FilterTemplate>
+                        <RadzenNumeric TValue="decimal?" Value="@(_monthlyFilters.ContainsKey("Dec2025") ? _monthlyFilters["Dec2025"] : null)" ValueChanged="@(args => OnMonthlyFilterChanged("Dec2025", args))" Style="width:100%" Placeholder="Search..." />
+                    </FilterTemplate>
+                    <Template Context="mainGrid">
+                        @(mainGrid.Dec2025?.ToString("C") ?? "-")
+                    </Template>
+                    <EditTemplate Context="mainGrid">
+                        <RadzenNumeric TValue="decimal?" @bind-Value="mainGrid.Dec2025" Style="width:100%" />
+                    </EditTemplate>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+
+    }
+</div>
+

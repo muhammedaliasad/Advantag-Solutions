@@ -64,11 +64,11 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     context.Database.MigrateAsync().GetAwaiter().GetResult();
 
-    // Seed Forecast data if it doesn't exist
-    await ForecastDataSeeder.SeedForecastsAsync(context);
+    // Seed MainGrid data if it doesn't exist
+    await MainGridDataSeeder.SeedMainGridsAsync(context);
 
-    // Seed Planning Scenario data if it doesn't exist
-    await PlanningScenarioDataSeeder.SeedPlanningScenarios(context);
+    // Seed Scenario data if it doesn't exist
+    await ScenarioDataSeeder.SeedScenarios(context);
 }
 
 app.Run();

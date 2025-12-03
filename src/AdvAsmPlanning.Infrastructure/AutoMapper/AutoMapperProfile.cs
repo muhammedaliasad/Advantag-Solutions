@@ -4,23 +4,23 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<Forecast, ForecastDto>()
+        CreateMap<MainGrid, MainGridDto>()
             .ForMember(dest => dest.Actuals, opt => opt.MapFrom(src => src.Actuals));
 
-        CreateMap<ForecastActual, ForecastActualDto>();
+        CreateMap<MainGridActual, MainGridActualDto>();
 
         // Reverse maps for convenience
-        CreateMap<ForecastDto, Forecast>()
+        CreateMap<MainGridDto, MainGrid>()
             .ForMember(dest => dest.Actuals, opt => opt.MapFrom(src => src.Actuals));
 
-        CreateMap<ForecastActualDto, ForecastActual>();
+        CreateMap<MainGridActualDto, MainGridActual>();
 
-        // Planning Scenario mappings
-        CreateMap<PlanningScenario, PlanningScenarioDto>()
+        // Scenario mappings
+        CreateMap<Scenario, ScenarioDto>()
             .ForMember(dest => dest.CreatedTime, opt => opt.MapFrom(src => src.CreatedAt))
             .ForMember(dest => dest.LastUpdatedTime, opt => opt.MapFrom(src => src.UpdatedAt));
 
-        CreateMap<PlanningScenarioDto, PlanningScenario>()
+        CreateMap<ScenarioDto, Scenario>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedTime))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.LastUpdatedTime));
     }

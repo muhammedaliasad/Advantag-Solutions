@@ -1,11 +1,13 @@
+using AdvAsmPlanning.Domain.Entities;
+
 namespace AdvAsmPlanning.Domain.Database;
 
-public static class ForecastDataSeeder
+public static class MainGridDataSeeder
 {
-    public static async Task SeedForecastsAsync(ApplicationDbContext context)
+    public static async Task SeedMainGridsAsync(ApplicationDbContext context)
     {
-        // Check if forecasts already exist
-        if (await context.Forecasts.AnyAsync())
+        // Check if main grids already exist
+        if (await context.MainGrids.AnyAsync())
         {
             return; // Data already seeded
         }
@@ -20,7 +22,7 @@ public static class ForecastDataSeeder
         var goFindOptions = new[] { "Yes", "No", "Pending" };
         var projectTypes = new[] { "Web Development", "Mobile App", "Cloud Migration", "Data Analytics", "AI Integration", "Security Audit", "System Upgrade", "API Development", "Database Optimization", "Infrastructure Setup" };
 
-        var forecasts = new List<Forecast>();
+        var mainGrids = new List<MainGrid>();
 
         for (int i = 1; i <= 100; i++)
         {
@@ -49,14 +51,14 @@ public static class ForecastDataSeeder
             // Generate Department No (format: DEPT-XXX)
             var departmentNo = $"DEPT-{random.Next(100, 999):D3}";
 
-            var forecast = new Forecast
+            var mainGrid = new MainGrid
             {
                 Client = client,
                 Customer = customer,
                 SizeProject = size,
                 Project = $"{projectType} - Project {i}",
                 GoFind = goFind,
-                Comment = $"Forecast entry #{i} - {projectType} for {client}",
+                Comment = $"Main grid entry #{i} - {projectType} for {client}",
                 Delta = delta,
                 AccountNo = accountNo,
                 DepartmentNo = departmentNo,
@@ -67,7 +69,7 @@ public static class ForecastDataSeeder
             for (int month = 1; month <= 12; month++)
             {
                 var baseAmount = random.Next(10000, 100000);
-                forecast.Actuals.Add(new ForecastActual
+                mainGrid.Actuals.Add(new MainGridActual
                 {
                     Year = 2024,
                     Month = month,
@@ -80,7 +82,7 @@ public static class ForecastDataSeeder
             for (int month = 1; month <= 12; month++)
             {
                 var baseAmount = random.Next(10000, 100000);
-                forecast.Actuals.Add(new ForecastActual
+                mainGrid.Actuals.Add(new MainGridActual
                 {
                     Year = 2025,
                     Month = month,
@@ -89,10 +91,10 @@ public static class ForecastDataSeeder
                 });
             }
 
-            forecasts.Add(forecast);
+            mainGrids.Add(mainGrid);
         }
 
-        await context.Forecasts.AddRangeAsync(forecasts);
+        await context.MainGrids.AddRangeAsync(mainGrids);
         await context.SaveChangesAsync();
     }
 }

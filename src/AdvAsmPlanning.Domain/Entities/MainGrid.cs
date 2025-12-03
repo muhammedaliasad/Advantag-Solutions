@@ -1,10 +1,10 @@
 namespace AdvAsmPlanning.Domain.Entities;
 
-public class Forecast : BaseEntity
+public class MainGrid : BaseEntity
 {
-    public Forecast()
+    public MainGrid()
     {
-        Actuals = new List<ForecastActual>();
+        Actuals = new List<MainGridActual>();
     }
 
     public string Client { get; set; } = string.Empty;
@@ -17,5 +17,6 @@ public class Forecast : BaseEntity
     public string AccountNo { get; set; } = string.Empty;
     public string DepartmentNo { get; set; } = string.Empty;
 
-    public virtual ICollection<ForecastActual> Actuals { get; set; }
+    public virtual ICollection<MainGridActual> Actuals { get; set; }
 }
+
