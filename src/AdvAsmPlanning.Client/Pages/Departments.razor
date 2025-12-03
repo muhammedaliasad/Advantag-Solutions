@@ -47,9 +47,25 @@
                     FilterMode="FilterMode.Advanced"
                     ColumnWidth="150px">
         <HeaderTemplate>
+            <RadzenButton Text="ADD" Icon="add_circle_outline" Click="@(() => {})" />
             <RadzenButton Icon="refresh" Click="@LoadData" Style="margin-left: 10px;" />
         </HeaderTemplate>
         <Columns>
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Context="department" Filterable="false" Sortable="false" TextAlign="TextAlign.Left" Width="156px">
+                <Template Context="department">
+                    <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@(args => {})" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Variant="Variant.Flat" Shade="Shade.Lighter" Size="ButtonSize.Medium" Click="@(args => {})" @onclick:stopPropagation="true">
+                    </RadzenButton>
+                </Template>
+                <EditTemplate Context="department">
+                    <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Medium" Click="@((args) => {})">
+                    </RadzenButton>
+                    <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Medium" class="my-1 ms-1" Click="@((args) => {})">
+                    </RadzenButton>
+                </EditTemplate>
+            </RadzenDataGridColumn>
+
             <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Code" Title="Code" Filterable="true" Sortable="true" MinWidth="100px">
                 <FilterTemplate>
                     <RadzenTextBox Value="@CodeFilter" ValueChanged="@OnCodeFilterChanged" Style="width:100%" Placeholder="Search code..." />
