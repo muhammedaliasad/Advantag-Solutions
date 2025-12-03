@@ -147,7 +147,7 @@ public partial class Forecasts : ComponentBase
     {
         try
         {
-            string url = string.Format(ApiRoutes.DeleteForecast, key);
+            string url = string.Format(ApiRoutes.GetDropdownByKey, key);
             var response = await httpClient.GetFromJsonAsync<ApiResponseDto<IEnumerable<DropdownResponseDto>>>(url);
             if (response != null && response.Success && response.Data != null)
             {
