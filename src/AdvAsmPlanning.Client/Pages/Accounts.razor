@@ -1,0 +1,223 @@
+@page "/accounts"
+@using AdvAsmPlanning.Client.Models
+@using Radzen
+@using Radzen.Blazor
+@layout EmptyLayout
+
+<PageTitle>Accounts</PageTitle>
+
+<style>
+    /* Ensure column headers display full text without truncation */
+    .rz-column-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-weight: bold !important;
+    }
+    
+    .rz-grid-table th {
+        white-space: nowrap !important;
+        font-weight: bold !important;
+    }
+
+    /* Allow text wrapping in cells for long content */
+    .rz-grid-table td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+</style>
+
+<div style="padding: 2rem;">
+    <h1>Accounts</h1>
+
+    <RadzenDataGrid @ref="grid" 
+                    Data="@accounts" 
+                    TItem="AccountViewModel"
+                    AllowFiltering="true" 
+                    AllowPaging="true" 
+                    PageSize="50"
+                    PageSizeOptions="@pageSizeOptions"
+                    PagerPosition="PagerPosition.Top"
+                    PagerAlwaysVisible="true"
+                    ShowPagingSummary="true"
+                    PagingSummaryFormat="Showing {0} - {1} of {2} accounts"
+                    AllowSorting="true" 
+                    AllowColumnResize="true"
+                    FilterMode="FilterMode.Advanced"
+                    ColumnWidth="150px">
+        <HeaderTemplate>
+            <RadzenButton Icon="refresh" Click="@LoadData" Style="margin-left: 10px;" />
+        </HeaderTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="Code" Title="Code" Filterable="true" Sortable="true" MinWidth="100px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@CodeFilter" ValueChanged="@OnCodeFilterChanged" Style="width:100%" Placeholder="Search code..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="CreatedBy" Title="Created By" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@CreatedByFilter" ValueChanged="@OnCreatedByFilterChanged" Style="width:100%" Placeholder="Search created by..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_RollupLevel2" Title="c_RollupLevel2" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@RollupLevel2Filter" ValueChanged="@OnRollupLevel2FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="Description" Title="Description" Filterable="true" Sortable="true" MinWidth="200px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@DescriptionFilter" ValueChanged="@OnDescriptionFilterChanged" Style="width:100%" Placeholder="Search description..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="CreatedOn" Title="Created On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.CreatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_AccountFunction" Title="c_AccountFunction" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AccountFunctionFilter" ValueChanged="@OnAccountFunctionFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="Alias" Title="Alias" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AliasFilter" ValueChanged="@OnAliasFilterChanged" Style="width:100%" Placeholder="Search alias..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="UpdatedBy" Title="Updated By" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@UpdatedByFilter" ValueChanged="@OnUpdatedByFilterChanged" Style="width:100%" Placeholder="Search updated by..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_SalesRollupLevel2" Title="c_SalesRollupLevel2" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SalesRollupLevel2Filter" ValueChanged="@OnSalesRollupLevel2FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="AccountType" Title="Account Type" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AccountTypeFilter" ValueChanged="@OnAccountTypeFilterChanged" Style="width:100%" Placeholder="Search account type..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_OMSRevenueAccountCode" Title="c_OMSRevenueAccountCode" Filterable="true" Sortable="true" MinWidth="200px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OMSRevenueAccountCodeFilter" ValueChanged="@OnOMSRevenueAccountCodeFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="DebitCredit" Title="Debit Credit" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@DebitCreditFilter" ValueChanged="@OnDebitCreditFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="UpdatedOn" Title="Updated On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.UpdatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_OMSRevenueAccountDescription" Title="c_OMSRevenueAccountDescription" Filterable="true" Sortable="true" MinWidth="250px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OMSRevenueAccountDescriptionFilter" ValueChanged="@OnOMSRevenueAccountDescriptionFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="AccountCategory" Title="Account Category" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AccountCategoryFilter" ValueChanged="@OnAccountCategoryFilterChanged" Style="width:100%" Placeholder="Search category..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="ActivatedOn" Title="Activated On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.ActivatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_GAAP_NONGAAP" Title="c_GAAP_NONGAAP" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@GAAPNONGAAPFilter" ValueChanged="@OnGAAPNONGAAPFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="Source" Title="Source" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SourceFilter" ValueChanged="@OnSourceFilterChanged" Style="width:100%" Placeholder="Search source..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="DeactivatedOn" Title="Deactivated On" Filterable="true" Sortable="true" MinWidth="130px">
+                <Template Context="data">
+                    @(data.DeactivatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_EBITDARollup" Title="c_EBITDARollup" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@EBITDARollupFilter" ValueChanged="@OnEBITDARollupFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_ExtReport" Title="c_ExtReport" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@ExtReportFilter" ValueChanged="@OnExtReportFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_AccountSubgroup" Title="c_AccountSubgroup" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AccountSubgroupFilter" ValueChanged="@OnAccountSubgroupFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_FLUXRollup1" Title="c_FLUXRollup1" Filterable="true" Sortable="true" MinWidth="130px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@FLUXRollup1Filter" ValueChanged="@OnFLUXRollup1FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_FLUXRollup2" Title="c_FLUXRollup2" Filterable="true" Sortable="true" MinWidth="130px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@FLUXRollup2Filter" ValueChanged="@OnFLUXRollup2FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_RollupLevel0" Title="c_RollupLevel0" Filterable="true" Sortable="true" MinWidth="130px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@RollupLevel0Filter" ValueChanged="@OnRollupLevel0FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_SignMultiplier" Title="c_SignMultiplier" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SignMultiplierFilter" ValueChanged="@OnSignMultiplierFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_NavisionGLCode" Title="c_NavisionGLCode" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@NavisionGLCodeFilter" ValueChanged="@OnNavisionGLCodeFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="AccountViewModel" Property="c_AllocationRollup" Title="c_AllocationRollup" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AllocationRollupFilter" ValueChanged="@OnAllocationRollupFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+

@@ -1,0 +1,295 @@
+@page "/departments"
+@using AdvAsmPlanning.Client.Models
+@using Radzen
+@using Radzen.Blazor
+@layout EmptyLayout
+
+<PageTitle>Departments</PageTitle>
+
+<style>
+    /* Ensure column headers display full text without truncation */
+    .rz-column-title {
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        font-weight: bold !important;
+    }
+    
+    .rz-grid-table th {
+        white-space: nowrap !important;
+        font-weight: bold !important;
+    }
+
+    /* Allow text wrapping in cells for long content */
+    .rz-grid-table td {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+</style>
+
+<div style="padding: 2rem;">
+    <h1>Departments</h1>
+
+    <RadzenDataGrid @ref="grid" 
+                    Data="@filteredDepartments" 
+                    TItem="DepartmentViewModel"
+                    AllowFiltering="true" 
+                    AllowPaging="true" 
+                    PageSize="50"
+                    PageSizeOptions="@pageSizeOptions"
+                    PagerPosition="PagerPosition.Top"
+                    PagerAlwaysVisible="true"
+                    ShowPagingSummary="true"
+                    PagingSummaryFormat="Showing {0} - {1} of {2} departments"
+                    AllowSorting="true" 
+                    AllowColumnResize="true"
+                    FilterMode="FilterMode.Advanced"
+                    ColumnWidth="150px">
+        <HeaderTemplate>
+            <RadzenButton Icon="refresh" Click="@LoadData" Style="margin-left: 10px;" />
+        </HeaderTemplate>
+        <Columns>
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Code" Title="Code" Filterable="true" Sortable="true" MinWidth="100px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@CodeFilter" ValueChanged="@OnCodeFilterChanged" Style="width:100%" Placeholder="Search code..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Entity" Title="c_Entity" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@EntityFilter" ValueChanged="@OnEntityFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Description" Title="Description" Filterable="true" Sortable="true" MinWidth="200px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@DescriptionFilter" ValueChanged="@OnDescriptionFilterChanged" Style="width:100%" Placeholder="Search description..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_InitialOrganicPeriod" Title="c_InitialOrganicPeriod" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@InitialOrganicPeriodFilter" ValueChanged="@OnInitialOrganicPeriodFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Alias" Title="Alias" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@AliasFilter" ValueChanged="@OnAliasFilterChanged" Style="width:100%" Placeholder="Search alias..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OMSRevenueAccountCode" Title="c_OMSRevenueAccountCode" Filterable="true" Sortable="true" MinWidth="200px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OMSRevenueAccountCodeFilter" ValueChanged="@OnOMSRevenueAccountCodeFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Active" Title="Active" Filterable="true" Sortable="true" MinWidth="80px">
+                <Template Context="data">
+                    @(data.Active ? "Yes" : "No")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_BoardorGAAP" Title="c_BoardorGAAP" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@BoardorGAAPFilter" ValueChanged="@OnBoardorGAAPFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="Source" Title="Source" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SourceFilter" ValueChanged="@OnSourceFilterChanged" Style="width:100%" Placeholder="Search source..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Branch" Title="c_Branch" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@BranchFilter" ValueChanged="@OnBranchFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="TimeAuditFields" Title="Time & Audit Fields" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@TimeAuditFieldsFilter" ValueChanged="@OnTimeAuditFieldsFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="CreatedBy" Title="Created By" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@CreatedByFilter" ValueChanged="@OnCreatedByFilterChanged" Style="width:100%" Placeholder="Search created by..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="CreatedOn" Title="Created On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.CreatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="UpdatedBy" Title="Updated By" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@UpdatedByFilter" ValueChanged="@OnUpdatedByFilterChanged" Style="width:100%" Placeholder="Search updated by..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="UpdatedOn" Title="Updated On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.UpdatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="ActivatedOn" Title="Activated On" Filterable="true" Sortable="true" MinWidth="120px">
+                <Template Context="data">
+                    @(data.ActivatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="DeactivatedOn" Title="Deactivated On" Filterable="true" Sortable="true" MinWidth="130px">
+                <Template Context="data">
+                    @(data.DeactivatedOn?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_BusinessUnit" Title="c_BusinessUnit" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@BusinessUnitFilter" ValueChanged="@OnBusinessUnitFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Component" Title="c_Component" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@ComponentFilter" ValueChanged="@OnComponentFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Country" Title="c_Country" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@CountryFilter" ValueChanged="@OnCountryFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_DateAcquired" Title="c_DateAcquired" Filterable="true" Sortable="true" MinWidth="130px">
+                <Template Context="data">
+                    @(data.c_DateAcquired?.ToString("yyyy-MM-dd") ?? "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Division" Title="c_Division" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@DivisionFilter" ValueChanged="@OnDivisionFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_FinanceOwner" Title="c_FinanceOwner" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@FinanceOwnerFilter" ValueChanged="@OnFinanceOwnerFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Group" Title="c_Group" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@GroupFilter" ValueChanged="@OnGroupFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_IncludedInBoard" Title="c_IncludedInBoard" Filterable="true" Sortable="true" MinWidth="150px">
+                <Template Context="data">
+                    @(data.c_IncludedInBoard == true ? "Yes" : data.c_IncludedInBoard == false ? "No" : "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_IncludedInGAAP" Title="c_IncludedInGAAP" Filterable="true" Sortable="true" MinWidth="150px">
+                <Template Context="data">
+                    @(data.c_IncludedInGAAP == true ? "Yes" : data.c_IncludedInGAAP == false ? "No" : "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_IsLeaf" Title="c_IsLeaf" Filterable="true" Sortable="true" MinWidth="100px">
+                <Template Context="data">
+                    @(data.c_IsLeaf == true ? "Yes" : data.c_IsLeaf == false ? "No" : "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Market" Title="c_Market" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@MarketFilter" ValueChanged="@OnMarketFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OrganizationGroup1" Title="c_OrganizationGroup1" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OrganizationGroup1Filter" ValueChanged="@OnOrganizationGroup1FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OrganizationGroup2" Title="c_OrganizationGroup2" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OrganizationGroup2Filter" ValueChanged="@OnOrganizationGroup2FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OrganizationGroup3" Title="c_OrganizationGroup3" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OrganizationGroup3Filter" ValueChanged="@OnOrganizationGroup3FilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_PeriodAcquired" Title="c_PeriodAcquired" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@PeriodAcquiredFilter" ValueChanged="@OnPeriodAcquiredFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_PshReportRollup" Title="c_PshReportRollup" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@PshReportRollupFilter" ValueChanged="@OnPshReportRollupFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_SalesLeader" Title="c_SalesLeader" Filterable="true" Sortable="true" MinWidth="130px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SalesLeaderFilter" ValueChanged="@OnSalesLeaderFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Segment" Title="c_Segment" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@SegmentFilter" ValueChanged="@OnSegmentFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Passthrough" Title="c_Passthrough" Filterable="true" Sortable="true" MinWidth="130px">
+                <Template Context="data">
+                    @(data.c_Passthrough == true ? "Yes" : data.c_Passthrough == false ? "No" : "-")
+                </Template>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_HRBusinessPartner" Title="c_HRBusinessPartner" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@HRBusinessPartnerFilter" ValueChanged="@OnHRBusinessPartnerFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_Partition" Title="c_Partition" Filterable="true" Sortable="true" MinWidth="120px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@PartitionFilter" ValueChanged="@OnPartitionFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OperatingSegment" Title="c_OperatingSegment" Filterable="true" Sortable="true" MinWidth="180px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OperatingSegmentFilter" ValueChanged="@OnOperatingSegmentFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+
+            <RadzenDataGridColumn TItem="DepartmentViewModel" Property="c_OperatingUnit" Title="c_OperatingUnit" Filterable="true" Sortable="true" MinWidth="150px">
+                <FilterTemplate>
+                    <RadzenTextBox Value="@OperatingUnitFilter" ValueChanged="@OnOperatingUnitFilterChanged" Style="width:100%" Placeholder="Search..." />
+                </FilterTemplate>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+</div>
+
